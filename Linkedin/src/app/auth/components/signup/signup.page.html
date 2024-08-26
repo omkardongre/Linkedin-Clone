@@ -1,0 +1,63 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <img src="../../../../assets/logo/Linkedin.svg" alt="LinkedIn" class="logo">
+    <h1>Make the most of your professional life</h1>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="signup-container">    
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-input label="First Name" labelPlacement="floating" type="text" formControlName="firstName"></ion-input>
+      </ion-item>
+      <div *ngIf="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched">
+        <small class="error-text">First Name is required and should be at least 2 characters long.</small>
+      </div>
+
+      <ion-item>
+        <ion-input label="Last Name" labelPlacement="floating" type="text" formControlName="lastName"></ion-input>
+      </ion-item>
+      <div *ngIf="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched">
+        <small class="error-text">Last Name is required and should be at least 2 characters long.</small>
+      </div>
+
+      <ion-item>
+        <ion-input label="Email or phone number" labelPlacement="floating" type="text" formControlName="email"></ion-input>
+      </ion-item>
+      <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+        <small class="error-text">Please enter a valid email.</small>
+      </div>
+
+      <ion-item>
+        <ion-input label="Password (6+ characters)" labelPlacement="floating" [type]="showPassword ? 'text' : 'password'" formControlName="password"></ion-input>
+        <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()">
+          {{ showPassword ? 'Hide' : 'Show' }}
+        </ion-button>
+      </ion-item>
+      <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
+        <small class="error-text">Password must be at least 6 characters long.</small>
+      </div>
+
+      <p class="terms">
+        By clicking Agree & Join or Continue, you agree to the LinkedIn 
+        <a href="#">User Agreement</a>, <a href="#">Privacy Policy</a>, and <a href="#">Cookie Policy</a>.
+      </p>
+      
+      <ion-button expand="block" type="submit" class="agree-join-btn" [disabled]="signupForm.invalid">Agree & Join</ion-button>
+    </form>
+    
+    <div class="divider">
+      <span>or</span>
+    </div>
+    
+    <!-- <ion-button expand="block" fill="outline" class="google-btn" (click)="continueWithGoogle()">
+      <ion-icon src="assets/google-icon.svg" slot="start"></ion-icon>
+      Continue with Google
+    </ion-button> -->
+    
+    <p class="signin-link">
+      Already on LinkedIn? <a href="login" (click)="goToSignIn()">Sign in</a>
+    </p>
+  </div>
+</ion-content>

@@ -1,0 +1,869 @@
+diff --git a/package-lock.json b/package-lock.json
+index 0f661d5..71762d0 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -18,13 +18,21 @@
+         "@nestjs/typeorm": "^10.0.2",
+         "@types/passport": "^1.0.16",
+         "bcrypt": "^5.1.1",
++        "class-transformer": "^0.5.1",
++        "class-validator": "^0.14.1",
+         "dotenv": "^16.4.5",
++        "file-type": "^19.4.1",
++        "magic-bytes.js": "^1.10.0",
++        "mime-types": "^2.1.35",
++        "morgan": "^1.10.0",
++        "multer": "^1.4.5-lts.1",
+         "passport": "^0.7.0",
+         "passport-jwt": "^4.0.1",
+         "pg": "^8.12.0",
+         "reflect-metadata": "^0.2.0",
+         "rxjs": "^7.8.1",
+-        "typeorm": "^0.3.20"
++        "typeorm": "^0.3.20",
++        "uuid": "^10.0.0"
+       },
+       "devDependencies": {
+         "@nestjs/cli": "^10.0.0",
+@@ -33,6 +41,8 @@
+         "@types/bcrypt": "^5.0.2",
+         "@types/express": "^4.17.17",
+         "@types/jest": "^29.5.2",
++        "@types/mime-types": "^2.1.4",
++        "@types/multer": "^1.4.11",
+         "@types/node": "^20.3.1",
+         "@types/passport-jwt": "^4.0.1",
+         "@types/supertest": "^6.0.0",
+@@ -1782,6 +1792,23 @@
+         "@nestjs/core": "^10.0.0"
+       }
+     },
++    "node_modules/@nestjs/platform-express/node_modules/multer": {
++      "version": "1.4.4-lts.1",
++      "resolved": "https://registry.npmjs.org/multer/-/multer-1.4.4-lts.1.tgz",
++      "integrity": "sha512-WeSGziVj6+Z2/MwQo3GvqzgR+9Uc+qt8SwHKh3gvNPiISKfsMfG4SvCOFYlxxgkXt7yIV2i1yczehm0EOKIxIg==",
++      "dependencies": {
++        "append-field": "^1.0.0",
++        "busboy": "^1.0.0",
++        "concat-stream": "^1.5.2",
++        "mkdirp": "^0.5.4",
++        "object-assign": "^4.1.1",
++        "type-is": "^1.6.4",
++        "xtend": "^4.0.0"
++      },
++      "engines": {
++        "node": ">= 6.0.0"
++      }
++    },
+     "node_modules/@nestjs/schematics": {
+       "version": "10.1.3",
+       "resolved": "https://registry.npmjs.org/@nestjs/schematics/-/schematics-10.1.3.tgz",
+@@ -1846,6 +1873,18 @@
+         "typeorm": "^0.3.0"
+       }
+     },
++    "node_modules/@nestjs/typeorm/node_modules/uuid": {
++      "version": "9.0.1",
++      "resolved": "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz",
++      "integrity": "sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==",
++      "funding": [
++        "https://github.com/sponsors/broofa",
++        "https://github.com/sponsors/ctavan"
++      ],
++      "bin": {
++        "uuid": "dist/bin/uuid"
++      }
++    },
+     "node_modules/@nodelib/fs.scandir": {
+       "version": "2.1.5",
+       "resolved": "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz",
+@@ -1919,6 +1958,11 @@
+         "url": "https://opencollective.com/unts"
+       }
+     },
++    "node_modules/@sec-ant/readable-stream": {
++      "version": "0.4.1",
++      "resolved": "https://registry.npmjs.org/@sec-ant/readable-stream/-/readable-stream-0.4.1.tgz",
++      "integrity": "sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg=="
++    },
+     "node_modules/@sinclair/typebox": {
+       "version": "0.27.8",
+       "resolved": "https://registry.npmjs.org/@sinclair/typebox/-/typebox-0.27.8.tgz",
+@@ -1948,6 +1992,11 @@
+       "resolved": "https://registry.npmjs.org/@sqltools/formatter/-/formatter-1.2.5.tgz",
+       "integrity": "sha512-Uy0+khmZqUrUGm5dmMqVlnvufZRSK0FbYzVgp0UMstm+F5+W2/jnEEQyc9vo1ZR/E5ZI/B1WjjoTqBqwJL6Krw=="
+     },
++    "node_modules/@tokenizer/token": {
++      "version": "0.3.0",
++      "resolved": "https://registry.npmjs.org/@tokenizer/token/-/token-0.3.0.tgz",
++      "integrity": "sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A=="
++    },
+     "node_modules/@tsconfig/node10": {
+       "version": "1.0.11",
+       "resolved": "https://registry.npmjs.org/@tsconfig/node10/-/node10-1.0.11.tgz",
+@@ -2166,6 +2215,21 @@
+       "resolved": "https://registry.npmjs.org/@types/mime/-/mime-1.3.5.tgz",
+       "integrity": "sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w=="
+     },
++    "node_modules/@types/mime-types": {
++      "version": "2.1.4",
++      "resolved": "https://registry.npmjs.org/@types/mime-types/-/mime-types-2.1.4.tgz",
++      "integrity": "sha512-lfU4b34HOri+kAY5UheuFMWPDOI+OPceBSHZKp69gEyTL/mmJ4cnU6Y/rlme3UL3GyOn6Y42hyIEw0/q8sWx5w==",
++      "dev": true
++    },
++    "node_modules/@types/multer": {
++      "version": "1.4.11",
++      "resolved": "https://registry.npmjs.org/@types/multer/-/multer-1.4.11.tgz",
++      "integrity": "sha512-svK240gr6LVWvv3YGyhLlA+6LRRWA4mnGIU7RcNmgjBYFl6665wcXrRfxGp5tEPVHUNm5FMcmq7too9bxCwX/w==",
++      "dev": true,
++      "dependencies": {
++        "@types/express": "*"
++      }
++    },
+     "node_modules/@types/node": {
+       "version": "20.14.14",
+       "resolved": "https://registry.npmjs.org/@types/node/-/node-20.14.14.tgz",
+@@ -2265,6 +2329,11 @@
+         "@types/superagent": "^8.1.0"
+       }
+     },
++    "node_modules/@types/validator": {
++      "version": "13.12.1",
++      "resolved": "https://registry.npmjs.org/@types/validator/-/validator-13.12.1.tgz",
++      "integrity": "sha512-w0URwf7BQb0rD/EuiG12KP0bailHKHP5YVviJG9zw3ykAokL0TuxU2TUqMB7EwZ59bDHYdeTIvjI5m0S7qHfOA=="
++    },
+     "node_modules/@types/yargs": {
+       "version": "17.0.32",
+       "resolved": "https://registry.npmjs.org/@types/yargs/-/yargs-17.0.32.tgz",
+@@ -3059,6 +3128,22 @@
+         }
+       ]
+     },
++    "node_modules/basic-auth": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmjs.org/basic-auth/-/basic-auth-2.0.1.tgz",
++      "integrity": "sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==",
++      "dependencies": {
++        "safe-buffer": "5.1.2"
++      },
++      "engines": {
++        "node": ">= 0.8"
++      }
++    },
++    "node_modules/basic-auth/node_modules/safe-buffer": {
++      "version": "5.1.2",
++      "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz",
++      "integrity": "sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g=="
++    },
+     "node_modules/bcrypt": {
+       "version": "5.1.1",
+       "resolved": "https://registry.npmjs.org/bcrypt/-/bcrypt-5.1.1.tgz",
+@@ -3419,6 +3504,21 @@
+       "integrity": "sha512-a3KdPAANPbNE4ZUv9h6LckSl9zLsYOP4MBmhIPkRaeyybt+r4UghLvq+xw/YwUcC1gqylCkL4rdVs3Lwupjm4Q==",
+       "dev": true
+     },
++    "node_modules/class-transformer": {
++      "version": "0.5.1",
++      "resolved": "https://registry.npmjs.org/class-transformer/-/class-transformer-0.5.1.tgz",
++      "integrity": "sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw=="
++    },
++    "node_modules/class-validator": {
++      "version": "0.14.1",
++      "resolved": "https://registry.npmjs.org/class-validator/-/class-validator-0.14.1.tgz",
++      "integrity": "sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==",
++      "dependencies": {
++        "@types/validator": "^13.11.8",
++        "libphonenumber-js": "^1.10.53",
++        "validator": "^13.9.0"
++      }
++    },
+     "node_modules/cli-cursor": {
+       "version": "3.1.0",
+       "resolved": "https://registry.npmjs.org/cli-cursor/-/cli-cursor-3.1.0.tgz",
+@@ -4662,6 +4762,49 @@
+         "node": "^10.12.0 || >=12.0.0"
+       }
+     },
++    "node_modules/file-type": {
++      "version": "19.4.1",
++      "resolved": "https://registry.npmjs.org/file-type/-/file-type-19.4.1.tgz",
++      "integrity": "sha512-RuWzwF2L9tCHS76KR/Mdh+DwJZcFCzrhrPXpOw6MlEfl/o31fjpTikzcKlYuyeV7e7ftdCGVJTNOCzkYD/aLbw==",
++      "dependencies": {
++        "get-stream": "^9.0.1",
++        "strtok3": "^8.1.0",
++        "token-types": "^6.0.0",
++        "uint8array-extras": "^1.3.0"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/sindresorhus/file-type?sponsor=1"
++      }
++    },
++    "node_modules/file-type/node_modules/get-stream": {
++      "version": "9.0.1",
++      "resolved": "https://registry.npmjs.org/get-stream/-/get-stream-9.0.1.tgz",
++      "integrity": "sha512-kVCxPF3vQM/N0B1PmoqVUqgHP+EeVjmZSQn+1oCRPxd2P21P2F19lIgbR3HBosbB1PUhOAoctJnfEn2GbN2eZA==",
++      "dependencies": {
++        "@sec-ant/readable-stream": "^0.4.1",
++        "is-stream": "^4.0.1"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
++    "node_modules/file-type/node_modules/is-stream": {
++      "version": "4.0.1",
++      "resolved": "https://registry.npmjs.org/is-stream/-/is-stream-4.0.1.tgz",
++      "integrity": "sha512-Dnz92NInDqYckGEUJv689RbRiTSEHCQ7wOVeALbkOz999YpqT46yMRIGtSNl2iCL1waAZSx40+h59NV/EwzV/A==",
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
+     "node_modules/filelist": {
+       "version": "1.0.4",
+       "resolved": "https://registry.npmjs.org/filelist/-/filelist-1.0.4.tgz",
+@@ -6545,6 +6688,11 @@
+         "node": ">= 0.8.0"
+       }
+     },
++    "node_modules/libphonenumber-js": {
++      "version": "1.11.7",
++      "resolved": "https://registry.npmjs.org/libphonenumber-js/-/libphonenumber-js-1.11.7.tgz",
++      "integrity": "sha512-x2xON4/Qg2bRIS11KIN9yCNYUjhtiEjNyptjX0mX+pyKHecxuJVLIpfX1lq9ZD6CrC/rB+y4GBi18c6CEcUR+A=="
++    },
+     "node_modules/lines-and-columns": {
+       "version": "1.2.4",
+       "resolved": "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz",
+@@ -6739,6 +6887,11 @@
+         "yallist": "^3.0.2"
+       }
+     },
++    "node_modules/magic-bytes.js": {
++      "version": "1.10.0",
++      "resolved": "https://registry.npmjs.org/magic-bytes.js/-/magic-bytes.js-1.10.0.tgz",
++      "integrity": "sha512-/k20Lg2q8LE5xiaaSkMXk4sfvI+9EGEykFS4b0CHHGWqDYU0bGUFSwchNOMA56D7TCs9GwVTkqe9als1/ns8UQ=="
++    },
+     "node_modules/magic-string": {
+       "version": "0.30.8",
+       "resolved": "https://registry.npmjs.org/magic-string/-/magic-string-0.30.8.tgz",
+@@ -6970,15 +7123,54 @@
+         "mkdirp": "bin/cmd.js"
+       }
+     },
++    "node_modules/morgan": {
++      "version": "1.10.0",
++      "resolved": "https://registry.npmjs.org/morgan/-/morgan-1.10.0.tgz",
++      "integrity": "sha512-AbegBVI4sh6El+1gNwvD5YIck7nSA36weD7xvIxG4in80j/UoK8AEGaWnnz8v1GxonMCltmlNs5ZKbGvl9b1XQ==",
++      "dependencies": {
++        "basic-auth": "~2.0.1",
++        "debug": "2.6.9",
++        "depd": "~2.0.0",
++        "on-finished": "~2.3.0",
++        "on-headers": "~1.0.2"
++      },
++      "engines": {
++        "node": ">= 0.8.0"
++      }
++    },
++    "node_modules/morgan/node_modules/debug": {
++      "version": "2.6.9",
++      "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
++      "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
++      "dependencies": {
++        "ms": "2.0.0"
++      }
++    },
++    "node_modules/morgan/node_modules/ms": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz",
++      "integrity": "sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A=="
++    },
++    "node_modules/morgan/node_modules/on-finished": {
++      "version": "2.3.0",
++      "resolved": "https://registry.npmjs.org/on-finished/-/on-finished-2.3.0.tgz",
++      "integrity": "sha512-ikqdkGAAyf/X/gPhXGvfgAytDZtDbr+bkNUJ0N9h5MI/dmdgCs3l6hoHrcUv41sRKew3jIwrp4qQDXiK99Utww==",
++      "dependencies": {
++        "ee-first": "1.1.1"
++      },
++      "engines": {
++        "node": ">= 0.8"
++      }
++    },
+     "node_modules/ms": {
+       "version": "2.1.2",
+       "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz",
+       "integrity": "sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w=="
+     },
+     "node_modules/multer": {
+-      "version": "1.4.4-lts.1",
+-      "resolved": "https://registry.npmjs.org/multer/-/multer-1.4.4-lts.1.tgz",
+-      "integrity": "sha512-WeSGziVj6+Z2/MwQo3GvqzgR+9Uc+qt8SwHKh3gvNPiISKfsMfG4SvCOFYlxxgkXt7yIV2i1yczehm0EOKIxIg==",
++      "version": "1.4.5-lts.1",
++      "resolved": "https://registry.npmjs.org/multer/-/multer-1.4.5-lts.1.tgz",
++      "integrity": "sha512-ywPWvcDMeH+z9gQq5qYHCCy+ethsk4goepZ45GLD63fOu0YcNecQxi64nDs3qluZB+murG3/D4dJ7+dGctcCQQ==",
+       "dependencies": {
+         "append-field": "^1.0.0",
+         "busboy": "^1.0.0",
+@@ -7156,6 +7348,14 @@
+         "node": ">= 0.8"
+       }
+     },
++    "node_modules/on-headers": {
++      "version": "1.0.2",
++      "resolved": "https://registry.npmjs.org/on-headers/-/on-headers-1.0.2.tgz",
++      "integrity": "sha512-pZAE+FJLoyITytdqK0U5s+FIpjN0JP3OzFi/u8Rx+EV5/W+JTWGXG8xFzevE7AjBfDqHv/8vL8qQsIhHnqRkrA==",
++      "engines": {
++        "node": ">= 0.8"
++      }
++    },
+     "node_modules/once": {
+       "version": "1.4.0",
+       "resolved": "https://registry.npmjs.org/once/-/once-1.4.0.tgz",
+@@ -7432,6 +7632,18 @@
+       "resolved": "https://registry.npmjs.org/pause/-/pause-0.0.1.tgz",
+       "integrity": "sha512-KG8UEiEVkR3wGEb4m5yZkVCzigAD+cVEJck2CzYZO37ZGJfctvVptVO192MwrtPhzONn6go8ylnOdMhKqi4nfg=="
+     },
++    "node_modules/peek-readable": {
++      "version": "5.1.4",
++      "resolved": "https://registry.npmjs.org/peek-readable/-/peek-readable-5.1.4.tgz",
++      "integrity": "sha512-E7mY2VmKqw9jYuXrSWGHFuPCW2SLQenzXLF3amGaY6lXXg4/b3gj5HVM7h8ZjCO/nZS9ICs0Cz285+32FvNd/A==",
++      "engines": {
++        "node": ">=14.16"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/sponsors/Borewit"
++      }
++    },
+     "node_modules/pg": {
+       "version": "8.12.0",
+       "resolved": "https://registry.npmjs.org/pg/-/pg-8.12.0.tgz",
+@@ -8577,6 +8789,22 @@
+         "url": "https://github.com/sponsors/sindresorhus"
+       }
+     },
++    "node_modules/strtok3": {
++      "version": "8.1.0",
++      "resolved": "https://registry.npmjs.org/strtok3/-/strtok3-8.1.0.tgz",
++      "integrity": "sha512-ExzDvHYPj6F6QkSNe/JxSlBxTh3OrI6wrAIz53ulxo1c4hBJ1bT9C/JrAthEKHWG9riVH3Xzg7B03Oxty6S2Lw==",
++      "dependencies": {
++        "@tokenizer/token": "^0.3.0",
++        "peek-readable": "^5.1.4"
++      },
++      "engines": {
++        "node": ">=16"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/sponsors/Borewit"
++      }
++    },
+     "node_modules/superagent": {
+       "version": "8.1.2",
+       "resolved": "https://registry.npmjs.org/superagent/-/superagent-8.1.2.tgz",
+@@ -8943,6 +9171,22 @@
+         "node": ">=0.6"
+       }
+     },
++    "node_modules/token-types": {
++      "version": "6.0.0",
++      "resolved": "https://registry.npmjs.org/token-types/-/token-types-6.0.0.tgz",
++      "integrity": "sha512-lbDrTLVsHhOMljPscd0yitpozq7Ga2M5Cvez5AjGg8GASBjtt6iERCAJ93yommPmz62fb45oFIXHEZ3u9bfJEA==",
++      "dependencies": {
++        "@tokenizer/token": "^0.3.0",
++        "ieee754": "^1.2.1"
++      },
++      "engines": {
++        "node": ">=14.16"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/sponsors/Borewit"
++      }
++    },
+     "node_modules/tr46": {
+       "version": "0.0.3",
+       "resolved": "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz",
+@@ -9314,6 +9558,18 @@
+         "url": "https://github.com/sponsors/isaacs"
+       }
+     },
++    "node_modules/typeorm/node_modules/uuid": {
++      "version": "9.0.1",
++      "resolved": "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz",
++      "integrity": "sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==",
++      "funding": [
++        "https://github.com/sponsors/broofa",
++        "https://github.com/sponsors/ctavan"
++      ],
++      "bin": {
++        "uuid": "dist/bin/uuid"
++      }
++    },
+     "node_modules/typescript": {
+       "version": "4.9.5",
+       "resolved": "https://registry.npmjs.org/typescript/-/typescript-4.9.5.tgz",
+@@ -9338,6 +9594,17 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/uint8array-extras": {
++      "version": "1.4.0",
++      "resolved": "https://registry.npmjs.org/uint8array-extras/-/uint8array-extras-1.4.0.tgz",
++      "integrity": "sha512-ZPtzy0hu4cZjv3z5NW9gfKnNLjoz4y6uv4HlelAjDK7sY/xOkKZv9xK/WQpcsBB3jEybChz9DPC2U/+cusjJVQ==",
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/sindresorhus"
++      }
++    },
+     "node_modules/undici-types": {
+       "version": "5.26.5",
+       "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-5.26.5.tgz",
+@@ -9413,9 +9680,9 @@
+       }
+     },
+     "node_modules/uuid": {
+-      "version": "9.0.1",
+-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz",
+-      "integrity": "sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==",
++      "version": "10.0.0",
++      "resolved": "https://registry.npmjs.org/uuid/-/uuid-10.0.0.tgz",
++      "integrity": "sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==",
+       "funding": [
+         "https://github.com/sponsors/broofa",
+         "https://github.com/sponsors/ctavan"
+@@ -9444,6 +9711,14 @@
+         "node": ">=10.12.0"
+       }
+     },
++    "node_modules/validator": {
++      "version": "13.12.0",
++      "resolved": "https://registry.npmjs.org/validator/-/validator-13.12.0.tgz",
++      "integrity": "sha512-c1Q0mCiPlgdTVVVIJIrBuxNicYE+t/7oKeI9MWLj3fh/uq2Pxh/3eeWbVZ4OcGW1TUf53At0njHw5SMdA3tmMg==",
++      "engines": {
++        "node": ">= 0.10"
++      }
++    },
+     "node_modules/vary": {
+       "version": "1.1.2",
+       "resolved": "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz",
+diff --git a/package.json b/package.json
+index ac5bbfa..122369a 100644
+--- a/package.json
++++ b/package.json
+@@ -29,13 +29,21 @@
+     "@nestjs/typeorm": "^10.0.2",
+     "@types/passport": "^1.0.16",
+     "bcrypt": "^5.1.1",
++    "class-transformer": "^0.5.1",
++    "class-validator": "^0.14.1",
+     "dotenv": "^16.4.5",
++    "file-type": "^19.4.1",
++    "magic-bytes.js": "^1.10.0",
++    "mime-types": "^2.1.35",
++    "morgan": "^1.10.0",
++    "multer": "^1.4.5-lts.1",
+     "passport": "^0.7.0",
+     "passport-jwt": "^4.0.1",
+     "pg": "^8.12.0",
+     "reflect-metadata": "^0.2.0",
+     "rxjs": "^7.8.1",
+-    "typeorm": "^0.3.20"
++    "typeorm": "^0.3.20",
++    "uuid": "^10.0.0"
+   },
+   "devDependencies": {
+     "@nestjs/cli": "^10.0.0",
+@@ -44,6 +52,8 @@
+     "@types/bcrypt": "^5.0.2",
+     "@types/express": "^4.17.17",
+     "@types/jest": "^29.5.2",
++    "@types/mime-types": "^2.1.4",
++    "@types/multer": "^1.4.11",
+     "@types/node": "^20.3.1",
+     "@types/passport-jwt": "^4.0.1",
+     "@types/supertest": "^6.0.0",
+diff --git a/src/app.module.ts b/src/app.module.ts
+index ffb47fd..b625216 100644
+--- a/src/app.module.ts
++++ b/src/app.module.ts
+@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
+ import { TypeOrmModule } from '@nestjs/typeorm';
+ import { FeedModule } from './feed/feed.module';
+ import { AuthModule } from './auth/auth.module';
++import { AllExceptionsFilter } from './core/all-exception.filter';
++import { APP_FILTER } from '@nestjs/core';
+ 
+ @Module({
+   imports: [
+@@ -23,6 +25,12 @@ import { AuthModule } from './auth/auth.module';
+     AuthModule,
+   ],
+   controllers: [AppController],
+-  providers: [AppService],
++  providers: [
++    AppService,
++    {
++      provide: APP_FILTER,
++      useClass: AllExceptionsFilter,
++    },
++  ],
+ })
+ export class AppModule {}
+diff --git a/src/auth/auth.module.ts b/src/auth/auth.module.ts
+index e431952..331c00e 100644
+--- a/src/auth/auth.module.ts
++++ b/src/auth/auth.module.ts
+@@ -8,6 +8,9 @@ import { JwtGuard } from './guards/jwt.guard';
+ import { JwtStrategy } from './guards/jwt.strategy';
+ import { ConfigModule, ConfigService } from '@nestjs/config';
+ import { RolesGuard } from './guards/roles.guard';
++import { UserService } from './services/user.service';
++import { UserController } from './controllers/user.controller';
++import { FriendRequestEntity } from './models/friend-request.entity';
+ 
+ @Module({
+   imports: [
+@@ -15,7 +18,7 @@ import { RolesGuard } from './guards/roles.guard';
+       isGlobal: true,
+     }),
+ 
+-    TypeOrmModule.forFeature([UserEntity]),
++    TypeOrmModule.forFeature([UserEntity, FriendRequestEntity]),
+     JwtModule.registerAsync({
+       useFactory: async (configService: ConfigService) => ({
+         secret: configService.get('JWT_SECRET'),
+@@ -24,7 +27,8 @@ import { RolesGuard } from './guards/roles.guard';
+       inject: [ConfigService],
+     }),
+   ],
+-  providers: [AuthService, JwtGuard, JwtStrategy, RolesGuard],
+-  controllers: [AuthController],
++  providers: [AuthService, JwtGuard, JwtStrategy, RolesGuard, UserService],
++  controllers: [AuthController, UserController],
++  exports: [AuthService, UserService],
+ })
+ export class AuthModule {}
+diff --git a/src/auth/models/user.entity.ts b/src/auth/models/user.entity.ts
+index cbeffd4..a9c7628 100644
+--- a/src/auth/models/user.entity.ts
++++ b/src/auth/models/user.entity.ts
+@@ -1,6 +1,7 @@
+ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+ import { Role } from './role.enum';
+ import { FeedPostEntity } from 'src/feed/models/post.entity';
++import { FriendRequestEntity } from './friend-request.entity';
+ 
+ @Entity('user')
+ export class UserEntity {
+@@ -19,9 +20,24 @@ export class UserEntity {
+   @Column({ select: false })
+   password: string;
+ 
++  @Column({ nullable: true })
++  imagePath: string;
++
+   @Column({ type: 'enum', enum: Role, default: Role.USER })
+   role: Role;
+ 
+   @OneToMany(() => FeedPostEntity, (feedPostEntity) => feedPostEntity.author)
+   feedPosts: FeedPostEntity[];
++
++  @OneToMany(
++    () => FriendRequestEntity,
++    (friendRequestEntity) => friendRequestEntity.creator,
++  )
++  sentFriendRequest: FriendRequestEntity[];
++
++  @OneToMany(
++    () => FriendRequestEntity,
++    (friendRequestEntity) => friendRequestEntity.receiver,
++  )
++  receivedFriendRequest: FriendRequestEntity[];
+ }
+diff --git a/src/auth/models/user.interface.ts b/src/auth/models/user.interface.ts
+index 34e32d6..dfbf644 100644
+--- a/src/auth/models/user.interface.ts
++++ b/src/auth/models/user.interface.ts
+@@ -7,6 +7,7 @@ export interface User {
+   lastName?: string;
+   email?: string;
+   password?: string;
++  imagePath?: string;
+   role?: Role;
+   feedPosts?: FeedPost[];
+ }
+diff --git a/src/auth/services/auth.service.ts b/src/auth/services/auth.service.ts
+index a2030b2..6f97590 100644
+--- a/src/auth/services/auth.service.ts
++++ b/src/auth/services/auth.service.ts
+@@ -1,5 +1,5 @@
+-import { Injectable } from '@nestjs/common';
+-import { from, map, Observable, switchMap } from 'rxjs';
++import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
++import { from, map, Observable, switchMap, catchError, throwError } from 'rxjs';
+ import { hash } from 'bcrypt';
+ import { User } from '../models/user.interface';
+ import { InjectRepository } from '@nestjs/typeorm';
+@@ -7,6 +7,7 @@ import { UserEntity } from '../models/user.entity';
+ import { Repository } from 'typeorm';
+ import * as bcrypt from 'bcrypt';
+ import { JwtService } from '@nestjs/jwt';
++import { error } from 'console';
+ 
+ @Injectable()
+ export class AuthService {
+@@ -17,11 +18,21 @@ export class AuthService {
+   ) {}
+ 
+   hashPassword(password: string): Observable<string> {
+-    return from(hash(password, 12));
++    return from(hash(password, 12)).pipe(
++      catchError(() => {
++        return throwError(
++          () =>
++            new HttpException(
++              'Password hashing failed',
++              HttpStatus.INTERNAL_SERVER_ERROR,
++            ),
++        );
++      }),
++    );
+   }
+ 
+   registerAccount(user: User): Observable<User> {
+-    return from(this.hashPassword(user.password)).pipe(
++    return this.hashPassword(user.password).pipe(
+       switchMap((hashedPassword: string) => {
+         return from(
+           this.userRepository.save({
+@@ -33,6 +44,24 @@ export class AuthService {
+             delete user.password;
+             return user;
+           }),
++          catchError(() => {
++            return throwError(
++              () =>
++                new HttpException(
++                  'Registration failed',
++                  HttpStatus.BAD_REQUEST,
++                ),
++            );
++          }),
++        );
++      }),
++      catchError(() => {
++        return throwError(
++          () =>
++            new HttpException(
++              'Registration process failed',
++              HttpStatus.INTERNAL_SERVER_ERROR,
++            ),
+         );
+       }),
+     );
+@@ -47,15 +76,28 @@ export class AuthService {
+     ).pipe(
+       switchMap((user: User) => {
+         if (!user) {
+-          throw new Error('User not found');
++          return throwError(
++            () =>
++              new HttpException(
++                {
++                  statusCode: HttpStatus.NOT_FOUND,
++                  error: 'Invalid Credential',
++                },
++                HttpStatus.NOT_FOUND,
++              ),
++          );
+         }
+         return from(bcrypt.compare(password, user.password)).pipe(
+           map((isValid: boolean) => {
+             if (isValid) {
+               delete user.password;
+               return user;
++            } else {
++              throw new HttpException(
++                'Invalid password',
++                HttpStatus.UNAUTHORIZED,
++              );
+             }
+-            throw new Error('Invalid password');
+           }),
+         );
+       }),
+@@ -65,10 +107,6 @@ export class AuthService {
+   login(user: User): Observable<{ token: string }> {
+     return this.validateUser(user.email, user.password).pipe(
+       switchMap((user: User) => {
+-        if (!user) {
+-          throw new Error('User not found');
+-        }
+-
+         return from(this.jwtService.signAsync({ user })).pipe(
+           map((token: string) => {
+             return { token };
+diff --git a/src/feed/controllers/feed.controller.ts b/src/feed/controllers/feed.controller.ts
+index 434657f..4c90fac 100644
+--- a/src/feed/controllers/feed.controller.ts
++++ b/src/feed/controllers/feed.controller.ts
+@@ -8,6 +8,7 @@ import {
+   Put,
+   Query,
+   Request,
++  Response,
+   UseGuards,
+ } from '@nestjs/common';
+ import { FeedService } from '../services/feed.service';
+@@ -18,12 +19,13 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
+ import { Roles } from 'src/auth/decorators/roles.decorator';
+ import { Role } from 'src/auth/models/role.enum';
+ import { RolesGuard } from 'src/auth/guards/roles.guard';
++import { IsCreatorGuard } from '../guards/is-creator.guard';
+ 
+ @Controller('feed')
+ export class FeedController {
+   constructor(private readonly feedService: FeedService) {}
+ 
+-  @Roles(Role.ADMIN, Role.PREMIUM)
++  @Roles(Role.ADMIN, Role.PREMIUM, Role.USER)
+   @UseGuards(JwtGuard, RolesGuard)
+   @Post()
+   create(@Body() feedPost: FeedPost, @Request() req): Observable<FeedPost> {
+@@ -31,14 +33,15 @@ export class FeedController {
+   }
+ 
+   @Get()
+-  findSelected(
++  findPosts(
+     @Query('take') take: number = 1,
+     @Query('skip') skip: number = 0,
+   ): Observable<FeedPost[]> {
+     take = take > 20 ? 20 : take;
+-    return this.feedService.findSelectedPosts(take, skip);
++    return this.feedService.findPosts(take, skip);
+   }
+ 
++  @UseGuards(JwtGuard, IsCreatorGuard)
+   @Put(':id')
+   update(
+     @Param('id') id: number,
+@@ -47,8 +50,18 @@ export class FeedController {
+     return this.feedService.updatePost(id, feedPost);
+   }
+ 
++  @UseGuards(JwtGuard, IsCreatorGuard)
+   @Delete(':id')
+   delete(@Param('id') id: number): Observable<DeleteResult> {
+     return this.feedService.deletePost(id);
+   }
++
++  @Get('image/:filename')
++  findImage(@Param('filename') filename, @Response() res) {
++    if (!filename) {
++      return res.status(404).send('File not found');
++    }
++
++    return res.sendFile(filename, { root: 'images' });
++  }
+ }
+diff --git a/src/feed/feed.module.ts b/src/feed/feed.module.ts
+index 921beeb..8966402 100644
+--- a/src/feed/feed.module.ts
++++ b/src/feed/feed.module.ts
+@@ -3,10 +3,12 @@ import { FeedService } from './services/feed.service';
+ import { FeedController } from './controllers/feed.controller';
+ import { TypeOrmModule } from '@nestjs/typeorm';
+ import { FeedPostEntity } from './models/post.entity';
++import { AuthModule } from 'src/auth/auth.module';
++import { IsCreatorGuard } from './guards/is-creator.guard';
+ 
+ @Module({
+-  imports: [TypeOrmModule.forFeature([FeedPostEntity])],
+-  providers: [FeedService],
++  imports: [TypeOrmModule.forFeature([FeedPostEntity]), AuthModule],
++  providers: [FeedService, IsCreatorGuard],
+   controllers: [FeedController],
+ })
+ export class FeedModule {}
+diff --git a/src/feed/services/feed.service.ts b/src/feed/services/feed.service.ts
+index 0a9fe17..d21d7fb 100644
+--- a/src/feed/services/feed.service.ts
++++ b/src/feed/services/feed.service.ts
+@@ -9,20 +9,24 @@ import { User } from 'src/auth/models/user.interface';
+ 
+ @Injectable()
+ export class FeedService {
+-  findSelectedPosts(take: number, skip: number): Observable<FeedPost[]> {
++  constructor(
++    @InjectRepository(FeedPostEntity)
++    private readonly feedPostRepository: Repository<FeedPostEntity>,
++  ) {}
++
++  findPosts(take: number, skip: number): Observable<FeedPost[]> {
+     return from(
+       this.feedPostRepository.find({
+         take,
+         skip,
++        order: {
++          createdAt: 'DESC',
++        },
++        relations: ['author'],
+       }),
+     );
+   }
+ 
+-  constructor(
+-    @InjectRepository(FeedPostEntity)
+-    private readonly feedPostRepository: Repository<FeedPostEntity>,
+-  ) {}
+-
+   createPost(user: User, feedPost: FeedPost): Observable<FeedPost> {
+     feedPost.author = user;
+     return from(this.feedPostRepository.save(feedPost));
+@@ -39,4 +43,13 @@ export class FeedService {
+   deletePost(id: number): Observable<DeleteResult> {
+     return from(this.feedPostRepository.delete(id));
+   }
++
++  findPostById(id: number): Observable<FeedPost> {
++    return from(
++      this.feedPostRepository.findOne({
++        where: { id },
++        relations: ['author'],
++      }),
++    );
++  }
+ }
+diff --git a/src/main.ts b/src/main.ts
+index bac5297..1b31525 100644
+--- a/src/main.ts
++++ b/src/main.ts
+@@ -1,10 +1,16 @@
+ import { NestFactory } from '@nestjs/core';
+ import { AppModule } from './app.module';
+ 
++import * as fs from 'fs';
++import * as morgan from 'morgan';
++
++const logStream = fs.createWriteStream('api.log', { flags: 'a' });
++
+ async function bootstrap() {
+   const app = await NestFactory.create(AppModule);
+   app.setGlobalPrefix('api');
+   app.enableCors();
++  app.use(morgan('combined', { stream: logStream }));
+   await app.listen(3000);
+ }
+ bootstrap();

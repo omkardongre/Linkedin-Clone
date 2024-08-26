@@ -1,0 +1,52 @@
+/* popover.component.scss */
+.popover-content {
+  padding: 0;
+}
+
+.profile-section {
+  border-bottom: 1px solid var(--ion-border-color, #dedede);
+  width: 100%;
+  ion-avatar {
+    margin-right: 20px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  p {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+
+  --padding-end: 0px;
+}
+
+ion-button {
+  margin: 10px;
+  font-size: 14px;
+}
+
+ion-item-divider {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+ion-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 44px;
+  --inner-padding-top: 8px;
+  --inner-padding-bottom: 8px;
+  font-size: 14px;
+
+  ion-icon {
+    margin-right: 10px;
+  }
+}

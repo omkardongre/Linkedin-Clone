@@ -1,0 +1,50 @@
+<ion-card class="start-post-card">
+  <ion-item lines="none">
+    <ion-avatar slot="start">
+      <img
+        *ngIf="userFullImagePath"
+        [src]="userFullImagePath"
+        alt="User Avatar"
+      />
+    </ion-avatar>
+    <ion-input
+      (click)="presentModal()"
+      placeholder="Start a post, try writing with AI"
+      readonly
+    ></ion-input>
+  </ion-item>
+  <ion-grid class="post-options">
+    <ion-row>
+      <ion-col class="option-col" size="4">
+        <ion-button class="option-button" fill="clear">
+          <ion-icon
+            slot="icon-only"
+            name="image-outline"
+            color="primary"
+          ></ion-icon>
+          <ion-label>Media</ion-label>
+        </ion-button>
+      </ion-col>
+      <ion-col class="option-col" size="4">
+        <ion-button class="option-button" fill="clear">
+          <ion-icon
+            slot="icon-only"
+            name="calendar-outline"
+            color="warning"
+          ></ion-icon>
+          <ion-label>Event</ion-label>
+        </ion-button>
+      </ion-col>
+      <ion-col class="option-col" size="4">
+        <ion-button class="option-button" fill="clear">
+          <ion-icon
+            slot="icon-only"
+            name="document-text-outline"
+            color="danger"
+          ></ion-icon>
+          <ion-label>Write article</ion-label>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-card>

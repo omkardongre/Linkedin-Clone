@@ -1,0 +1,120 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <img
+      src="../../../../assets/logo/Linkedin.svg"
+      alt="LinkedIn"
+      class="logo"
+    />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <h1>Sign in</h1>
+    <p>Stay updated on your professional world.</p>
+
+    <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-input
+          label="Email or phone"
+          labelPlacement="floating"
+          type="text"
+          formControlName="email"
+        >
+        </ion-input>
+      </ion-item>
+      <ion-text
+        *ngIf="signinForm.get('email')?.touched && signinForm.get('email')?.hasError('required')"
+        color="danger"
+      >
+        Email is required.
+      </ion-text>
+      <ion-text
+        *ngIf="signinForm.get('email')?.touched && signinForm.get('email')?.hasError('email')"
+        color="danger"
+      >
+        Enter a valid email.
+      </ion-text>
+
+      <ion-item>
+        <ion-input
+          label="Password"
+          labelPlacement="floating"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+        >
+        </ion-input>
+        <ion-button
+          fill="clear"
+          slot="end"
+          (click)="togglePasswordVisibility()"
+        >
+          {{ showPassword ? 'Hide' : 'Show' }}
+        </ion-button>
+      </ion-item>
+      <ion-text
+        *ngIf="signinForm.get('password')?.touched && signinForm.get('password')?.hasError('required')"
+        color="danger"
+      >
+        Password is required.
+      </ion-text>
+      <ion-text
+        *ngIf="signinForm.get('password')?.touched && signinForm.get('password')?.hasError('minlength')"
+        color="danger"
+      >
+        Password must be at least 6 characters.
+      </ion-text>
+
+      <ion-text
+        color="primary"
+        class="forgot-password"
+        (click)="forgotPassword()"
+        >Forgot password?</ion-text
+      >
+
+      <ion-button
+        expand="block"
+        type="submit"
+        class="signin-btn"
+        [disabled]="!signinForm.valid"
+        >Sign in</ion-button
+      >
+
+      <ion-text *ngIf="errorMessage" color="danger" class="error-message">
+        {{ errorMessage }}
+      </ion-text>
+    </form>
+
+    <ion-button
+      expand="block"
+      fill="outline"
+      class="google-btn"
+      (click)="signInWithGoogle()"
+    >
+      <ion-icon src="assets/google-icon.svg" slot="start"></ion-icon>
+      Continue with Google
+    </ion-button>
+
+    <ion-button
+      expand="block"
+      fill="outline"
+      class="apple-btn"
+      (click)="signInWithApple()"
+    >
+      <ion-icon name="logo-apple" slot="start"></ion-icon>
+      Sign in with Apple
+    </ion-button>
+
+    <p class="terms">
+      By clicking Continue, you agree to LinkedIn's
+      <a href="#">User Agreement</a>, <a href="#">Privacy Policy</a>, and
+      <a href="#">Cookie Policy</a>.
+    </p>
+  </div>
+
+  <ion-toolbar>
+    <p class="join-now">
+      New to LinkedIn? <a href="signup" (click)="joinNow()">Join now</a>
+    </p>
+  </ion-toolbar>
+</ion-content>

@@ -1,0 +1,34 @@
+<ion-content class="ion-padding">
+  <ng-container *ngIf="friendRequestSender.length > 0; else noRequests">
+    <ion-list>
+      <ion-item *ngFor="let sender of friendRequestSender">
+        <ion-avatar slot="start">
+          <img [src]="sender.fullImagePath" alt="Profile Picture" />
+        </ion-avatar>
+        <ion-buttons slot="end">
+          <ion-button
+            (click)="handleFriendRequest(sender.id, 'ACCEPTED')"
+            color="primary"
+          >
+            <ion-icon name="checkmark-outline"></ion-icon>
+            Accept
+          </ion-button>
+          <ion-button
+            (click)="handleFriendRequest(sender.id, 'DECLINED')"
+            color="medium"
+          >
+            <ion-icon name="close-outline"></ion-icon>
+            Decline
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+
+  <ng-template #noRequests>
+    <div class="no-requests">
+      <ion-icon name="people-outline" size="large"></ion-icon>
+      <p>No pending invitations</p>
+    </div>
+  </ng-template>
+</ion-content>

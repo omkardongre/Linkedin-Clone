@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="toolbar-content">
+        <ion-col size="4" size-md="5" class="left-section">
+          <ion-button class="logo-button">
+            <ion-icon
+              slot="icon-only"
+              color="primary"
+              name="logo-linkedin"
+            ></ion-icon>
+          </ion-button>
+          <div class="search-container">
+            <ion-icon name="search-outline"></ion-icon>
+            <input type="text" placeholder="Search" class="search-input" />
+          </div>
+        </ion-col>
+
+        <ion-col size="8" size-md="7" class="right-section">
+          <div class="nav-button" [routerLink]="['/']">
+            <ion-icon name="home"></ion-icon>
+            <ion-label class="nav-label">Home</ion-label>
+          </div>
+          <div class="nav-button" (click)="presentFriendRequestPopover($event)">
+            <ion-icon name="people"></ion-icon>
+            <ion-label class="nav-label">My Network</ion-label>
+            <ion-badge class="notification-badge" color="danger">{{
+              this.connectionProfileService.friendRequests.length || 0
+            }}</ion-badge>
+          </div>
+          <div class="nav-button">
+            <ion-icon name="briefcase"></ion-icon>
+            <ion-label class="nav-label">Jobs</ion-label>
+          </div>
+          <div class="nav-button">
+            <ion-icon name="chatbubbles"></ion-icon>
+            <ion-label class="nav-label">Messaging</ion-label>
+          </div>
+          <div class="nav-button">
+            <ion-icon name="notifications"></ion-icon>
+            <ion-label class="nav-label">Notifications</ion-label>
+          </div>
+          <div class="nav-button" (click)="presentPopover($event)">
+            <ion-avatar>
+              <img
+                *ngIf="userFullImagePath"
+                [src]="userFullImagePath"
+                alt="User Avatar"
+              />
+            </ion-avatar>
+            <ion-label class="nav-label"
+              >Me<ion-icon name="caret-down"></ion-icon
+            ></ion-label>
+          </div>
+          <div class="separator"></div>
+          <div class="nav-button for-business">
+            <ion-icon name="apps"></ion-icon>
+            <ion-label class="nav-label"
+              >For Business<ion-icon name="caret-down"></ion-icon
+            ></ion-label>
+          </div>
+          <a href="#" class="premium-link">Try Premium for ₹0</a>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>

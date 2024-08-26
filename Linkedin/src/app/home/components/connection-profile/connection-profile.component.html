@@ -1,0 +1,78 @@
+<div class="card-container">
+  <ion-card>
+    <div class="profile-header">
+      <div class="profile-image">
+        <ion-avatar>
+          <img [src]="userFullImagePath" alt="Profile Picture" />
+        </ion-avatar>
+      </div>
+    </div>
+    <ion-card-content>
+      <h2>{{ friendUser?.firstName }} {{ friendUser?.lastName }}</h2>
+      <p>Software Engineer</p>
+      <p>Pune, India · <a href="#">Contact info</a></p>
+      <ion-grid>
+        <ion-row class="ion-justify-content-start">
+          <ion-col size="12" size-md="6">
+            <ion-row class="ion-justify-content-start">
+              <ion-col size="auto" *ngIf="friendRequest?.status !== 'ACCEPTED'">
+                <ng-container [ngSwitch]="friendRequest?.status">
+                  <ion-button
+                    *ngSwitchCase="'NOT-SENT'"
+                    expand="block"
+                    color="primary"
+                    (click)="addUser()"
+                  >
+                    Connect
+                  </ion-button>
+                  <ion-button
+                    *ngSwitchCase="'DECLINED'"
+                    expand="block"
+                    color="primary"
+                    (click)="addUser()"
+                  >
+                    Connect
+                  </ion-button>
+                  <ion-button
+                    *ngSwitchCase="'PENDING'"
+                    expand="block"
+                    color="medium"
+                    disabled
+                  >
+                    Pending
+                  </ion-button>
+                  <ion-button
+                    *ngSwitchCase="'WAITING-FOR-APPROVAL'"
+                    expand="block"
+                    color="primary"
+                    (click)="handleFriendRequest('ACCEPTED')"
+                  >
+                    Accept
+                  </ion-button>
+                </ng-container>
+              </ion-col>
+              <ion-col size="auto">
+                <ion-button
+                  *ngIf="friendRequest?.status === 'WAITING-FOR-APPROVAL'"
+                  expand="block"
+                  fill="outline"
+                  (click)="handleFriendRequest('DECLINED')"
+                  >Decline</ion-button
+                >
+                <ion-button
+                  *ngIf="friendRequest?.status === 'ACCEPTED'"
+                  expand="block"
+                  fill="outline"
+                  >Message</ion-button
+                >
+              </ion-col>
+              <ion-col size="auto">
+                <ion-button expand="block" fill="outline">More</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</div>

@@ -1,0 +1,64 @@
+<div class="profile-card">
+  <div
+    class="cover-image"
+    [style.background-color]="setBackgroundColor()"
+  ></div>
+  <div class="profile-info">
+    <ion-avatar class="photo-placeholder" (click)="triggerFileUpload()">
+      <ng-container *ngIf="userFullImagePath; else showIcon">
+        <img [src]="userFullImagePath" alt="User Image" />
+        <!-- <ion-icon name="camera">omkar</ion-icon> -->
+      </ng-container>
+      <ng-template #showIcon>
+        <ion-icon name="camera"></ion-icon>
+      </ng-template>
+    </ion-avatar>
+
+    <!-- http://localhost:3000/api/feed/image/undefined -->
+    <input type="file" #fileInput hidden (change)="onFileSelected($event)" />
+    <h2>Welcome, {{ fullName }}!</h2>
+  </div>
+  <ion-button
+    expand="block"
+    fill="clear"
+    class="show-more-btn"
+    (click)="toggleWrapper()"
+    *ngIf="isWrapperHidden && isMobileView"
+  >
+    Show More
+    <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+  </ion-button>
+  <div class="wrapper" [class.hidden]="isWrapperHidden">
+    <div class="profile-stats">
+      <div class="stat-item">
+        <span class="stat-label">Profile viewers</span>
+        <span class="stat-value">13</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Connections</span>
+        <span class="stat-value">404</span>
+      </div>
+      <a href="#" class="grow-network">Grow your network</a>
+    </div>
+    <div class="premium-offer">
+      <h3>Grow your career with Premium</h3>
+      <button class="premium-button">
+        <ion-icon name="diamond"></ion-icon>
+        Try Premium for ₹0
+      </button>
+    </div>
+    <div class="saved-items">
+      <ion-icon name="bookmark"></ion-icon>
+      <span style="font-weight: bold">Saved items</span>
+    </div>
+    <ion-button
+      expand="block"
+      fill="clear"
+      class="show-less-btn"
+      (click)="toggleWrapper()"
+    >
+      Show Less
+      <ion-icon name="chevron-up-outline" slot="end"></ion-icon>
+    </ion-button>
+  </div>
+</div>

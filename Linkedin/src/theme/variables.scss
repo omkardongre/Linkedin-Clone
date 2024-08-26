@@ -1,0 +1,83 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+// variables.scss
+
+// Primary Colors
+$primary-color: #0077b5;  // LinkedIn blue
+$primary-light-color: #00a0dc;  // Lighter blue used for hover states
+$primary-dark-color: #005582;  // Darker blue used for active states
+
+// Secondary Colors
+$secondary-color: #ffffff;  // White
+$secondary-light-color: #f3f2ef;  // Light grey background
+$secondary-dark-color: #8d6f47;  // Dark color for icons
+
+// Accent Colors
+$accent-color: #ff6a00;  // Orange for accents and highlights
+
+// Text Colors
+$text-color: #333333;  // Dark grey for main text
+$text-light-color: #666666;  // Lighter grey for secondary text
+
+// Background Colors
+$background-color: #f3f2ef;  // Light grey background
+$card-background-color: #ffffff;  // White for cards and containers
+
+// Border Colors
+$border-color: #d1d1d1;  // Light grey borders
+
+// Shadow
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+// Font Sizes
+$font-size-base: 14px;
+$font-size-large: 18px;
+$font-size-small: 12px;
+
+// Spacing
+$spacing-unit: 8px;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Border Radius
+$border-radius: 4px;
+
+// Transition
+$transition-duration: 0.3s;
+$transition-ease: ease-in-out;
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: $background-color;
+  color: $text-color;
+}
+
+a {
+  color: $primary-color;
+  &:hover {
+    color: $primary-light-color;
+  }
+}
+
+button {
+  background-color: $primary-color;
+  color: $secondary-color;
+  border: none;
+  border-radius: $border-radius;
+  padding: $spacing-unit $spacing-unit * 2;
+  transition: background-color $transition-duration $transition-ease;
+
+  &:hover {
+    background-color: $primary-light-color;
+  }
+
+  &:active {
+    background-color: $primary-dark-color;
+  }
+}
+
+// Additional styles can be added as needed

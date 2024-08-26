@@ -1,0 +1,87 @@
+:host {
+  display: block;
+  border: 1px solid #ccc;
+  padding: 16px;
+  height: 50px;
+}
+
+ion-header {
+  display: block;
+  box-shadow: none;
+  ion-toolbar {
+    --background: #fff;
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+
+  ion-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  .user-name {
+    font-weight: bold;
+    padding-top: 15px;
+  }
+
+  ion-select {
+    max-width: 15px;
+    padding-top: 5px;
+  }
+}
+
+.post-to-anyone {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+ion-textarea {
+  --background: #f3f2ef;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left-buttons,
+  .right-buttons {
+    display: flex;
+  }
+
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 0px;
+  margin-right: 10px;
+  height: 20px;
+}
+
+.post-header {
+  font-size: 1.2rem;
+  font-weight: lighter;
+  color: #6c757d;
+}
+
+.close-icon {
+  color: #6c757d; /* Grey color */
+  font-size: 1.5rem;
+}

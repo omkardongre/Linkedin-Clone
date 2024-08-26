@@ -1,0 +1,55 @@
+<!-- popover.component.html -->
+<ion-content class="popover-content">
+  <ion-item lines="none" class="profile-section">
+    <ion-avatar slot="start">
+      <img
+        *ngIf="userFullImagePath"
+        [src]="userFullImagePath"
+        alt="User Avatar"
+      />
+    </ion-avatar>
+    <ion-label>
+      <h2>{{ fullName }}</h2>
+      <p>
+        Student at Pimpri Chinchwad Education Trusts College of Engineering,
+        Nigdi, Pune 44
+      </p>
+    </ion-label>
+  </ion-item>
+  <ion-button expand="full" color="primary">View Profile</ion-button>
+
+  <ion-list>
+    <ion-item-divider>Account</ion-item-divider>
+    <ion-item button>
+      <ion-icon slot="start" name="star-outline"></ion-icon>
+      <ion-label>Try Premium for ₹0</ion-label>
+    </ion-item>
+    <ion-item button>
+      <ion-icon slot="start" name="settings-outline"></ion-icon>
+      <ion-label>Settings & Privacy</ion-label>
+    </ion-item>
+    <ion-item button>
+      <ion-icon slot="start" name="help-circle-outline"></ion-icon>
+      <ion-label>Help</ion-label>
+    </ion-item>
+    <ion-item button>
+      <ion-icon slot="start" name="globe-outline"></ion-icon>
+      <ion-label>Language</ion-label>
+    </ion-item>
+
+    <ion-item-divider>Manage</ion-item-divider>
+    <ion-item button>
+      <ion-icon slot="start" name="document-text-outline"></ion-icon>
+      <ion-label>Posts & Activity</ion-label>
+    </ion-item>
+    <ion-item button>
+      <ion-icon slot="start" name="briefcase-outline"></ion-icon>
+      <ion-label>Job Posting Account</ion-label>
+    </ion-item>
+
+    <ion-item button (click)="onSignOut()">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      <ion-label>Sign Out</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,69 @@
+<ion-text class="modal-header">
+  <ion-title class="post-header"
+    >{{ postId ? "Edit" : "Start" }} a post</ion-title
+  >
+  <ion-button fill="clear" (click)="dismissModal()">
+    <ion-icon name="close" class="close-icon"></ion-icon>
+  </ion-button>
+</ion-text>
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <div class="user-info">
+        <ion-avatar>
+          <img
+            *ngIf="userFullImagePath"
+            [src]="userFullImagePath"
+            alt="User Avatar"
+          />
+        </ion-avatar>
+        <ion-col>
+          <ion-row>
+            <span class="user-name">{{ fullName }}</span>
+            <ion-select>
+              <ion-select-option value="anyone">Anyone</ion-select-option>
+              <ion-select-option value="connections"
+                >Connections</ion-select-option
+              >
+            </ion-select>
+          </ion-row>
+          <ion-row>
+            <span class="post-to-anyone">Post to Anyone</span>
+          </ion-row>
+        </ion-col>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding custom-height">
+  <ion-textarea
+    placeholder="What do you want to talk about?"
+    rows="6"
+    [(ngModel)]="postContent"
+  ></ion-textarea>
+
+  <div class="action-buttons">
+    <div class="left-buttons">
+      <ion-button fill="clear" color="medium">
+        <ion-icon name="happy-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" color="medium">
+        <ion-icon name="image-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" color="medium">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" color="medium">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </div>
+    <div class="right-buttons">
+      <ion-button color="primary" (click)="onPost()" [disabled]="!postContent">
+        <ion-icon name="time-outline" slot="start"></ion-icon>
+        {{ postId ? "Edit" : "Create" }}
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

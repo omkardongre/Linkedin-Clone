@@ -1,0 +1,84 @@
+<ion-content [scrollEvents]="true">
+  <ion-list>
+    <ion-card *ngFor="let post of posts">
+      <ion-card-header>
+        <ion-item lines="none">
+          <ion-avatar
+            slot="start"
+            style="cursor: pointer"
+            [routerLink]="['/home', post.author.id]"
+          >
+            <img [src]="post.fullImagePath" />
+          </ion-avatar>
+          <ion-label
+            style="cursor: pointer"
+            [routerLink]="['/home', post.author.id]"
+          >
+            <h2>{{ post.author.firstName }} {{ post.author.lastName }}</h2>
+            <p>Software Engineer</p>
+            <p>{{ post.createdAt }} •</p>
+          </ion-label>
+          <ion-buttons
+            slot="end"
+            class="modify-button"
+            *ngIf="userId === post.author.id"
+          >
+            <ion-button (click)="presentUpdateModal(post.id)">
+              <ion-icon
+                slot="icon-only"
+                name="create-outline"
+                size="small"
+              ></ion-icon>
+            </ion-button>
+            <ion-button (click)="deletePost(post.id)">
+              <ion-icon
+                slot="icon-only"
+                name="trash-outline"
+                size="small"
+              ></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-card-header>
+
+      <ion-card-content>
+        {{ post.body }}
+      </ion-card-content>
+
+      <ion-row class="ion-justify-content-between ion-padding">
+        <ion-col size="3">
+          <ion-button fill="clear" size="small">
+            <ion-icon name="thumbs-up-outline" slot="start"></ion-icon>
+            Like
+          </ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button fill="clear" size="small">
+            <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+            Comment
+          </ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button fill="clear" size="small">
+            <ion-icon name="repeat-outline" slot="start"></ion-icon>
+            Repost
+          </ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button fill="clear" size="small">
+            <ion-icon name="send-outline" slot="start"></ion-icon>
+            Send
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="1000px" (ionInfinite)="loadPosts($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more posts..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
