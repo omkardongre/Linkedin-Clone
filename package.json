@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "class-validator": "^0.14.1",
     "file-type": "^19.4.1"
   }
 }
