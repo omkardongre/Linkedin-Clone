@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import * as path from 'path';
 import magic from 'magic-bytes.js';
+import { handleError } from 'src/core/error.utils';
+import { HttpStatus } from '@nestjs/common';
 
 type validFileExtension = 'jpg' | 'jpeg' | 'png';
 type validMimeType = 'image/jpeg' | 'image/png' | 'image/jpg';
@@ -27,11 +29,9 @@ export const saveImageToStorage = {
   }),
   fileFilter: (req, file, cb) => {
     const mimeType = file.mimetype;
-
     if (!validMimeTypes.includes(mimeType)) {
-      return cb(new Error('Invalid mime type'));
+      return cb(new Error('Invalid file type'), false);
     }
-
     cb(null, true);
   },
 };

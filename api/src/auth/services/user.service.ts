@@ -1,13 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import {
-  catchError,
-  from,
-  map,
-  Observable,
-  of,
-  switchMap,
-  throwError,
-} from 'rxjs';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { from, map, Observable, of, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../models/user.entity';
@@ -18,9 +10,18 @@ import {
   FriendRequestStatus,
 } from '../models/friend-request.interface';
 import { FriendRequestEntity } from '../models/friend-request.entity';
+import { handleError } from 'src/core/error.utils';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+
+    @InjectRepository(FriendRequestEntity)
+    private readonly friendRequestRepository: Repository<FriendRequestEntity>,
+  ) {}
+
   findFriendRequest(
     user1IdInt: number,
     user2IdInt: number,
@@ -34,39 +35,14 @@ export class UserService {
         relations: ['creator', 'receiver'],
       }),
     ).pipe(
-      map((friendRequest: FriendRequest) => {
+      switchMap((friendRequest: FriendRequest) => {
         if (!friendRequest) {
-          throw new HttpException(
-            {
-              statusCode: HttpStatus.NOT_FOUND,
-              error: 'Friend request not found',
-            },
-            HttpStatus.NOT_FOUND,
-          );
+          return handleError(HttpStatus.NOT_FOUND, 'Friend request not found');
         }
-        return friendRequest;
-      }),
-      catchError(() => {
-        return throwError(
-          () =>
-            new HttpException(
-              {
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'Friend request retrieval failed',
-              },
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            ),
-        );
+        return of(friendRequest);
       }),
     );
   }
-  constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-
-    @InjectRepository(FriendRequestEntity)
-    private readonly friendRequestRepository: Repository<FriendRequestEntity>,
-  ) {}
 
   findUserById(id: number): Observable<User> {
     return from(
@@ -74,49 +50,31 @@ export class UserService {
         where: { id },
       }),
     ).pipe(
-      map((user: User) => {
+      switchMap((user: User) => {
         if (!user) {
-          throw new HttpException(
-            {
-              statusCode: HttpStatus.NOT_FOUND,
-              error: 'User not found',
-            },
-            HttpStatus.NOT_FOUND,
-          );
+          return handleError(HttpStatus.NOT_FOUND, 'User not found');
         }
-        return user;
-      }),
-      catchError(() => {
-        return throwError(
-          () =>
-            new HttpException(
-              {
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'User retrieval failed',
-              },
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            ),
-        );
+        return of(user);
       }),
     );
   }
 
-  updateUserByImage(id: number, imagePath: string): Observable<UpdateResult> {
+  updateUserByImage(
+    id: number,
+    imagePath: string,
+  ): Observable<{ modifiedFileName: string }> {
     return from(
       this.userRepository.update(id, {
         imagePath,
       }),
     ).pipe(
-      catchError(() => {
-        return throwError(
-          () =>
-            new HttpException(
-              {
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'User image update failed',
-              },
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            ),
+      switchMap((updateResult: UpdateResult) => {
+        if (updateResult.affected === 1) {
+          return of({ modifiedFileName: imagePath });
+        }
+        return handleError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'Failed to update user image',
         );
       }),
     );
@@ -129,8 +87,10 @@ export class UserService {
         where: { id },
       }),
     ).pipe(
-      switchMap((response) => {
-        if (!response) return of('');
+      switchMap((response: { imagePath: string }) => {
+        if (response === null) {
+          return of('blank-profile-picture.png');
+        }
         return of(response.imagePath);
       }),
     );
@@ -151,36 +111,15 @@ export class UserService {
       map((friendRequest: FriendRequest) => {
         return !!friendRequest;
       }),
-      catchError(() => {
-        return throwError(
-          () =>
-            new HttpException(
-              {
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'Friend request retrieval failed',
-              },
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            ),
-        );
-      }),
     );
   }
 
   sendFriendRequest(
     receiverIdInt: number,
     creator: User,
-  ): Observable<FriendRequest | { error: string }> {
+  ): Observable<FriendRequest> {
     if (receiverIdInt === creator.id) {
-      return throwError(
-        () =>
-          new HttpException(
-            {
-              statusCode: HttpStatus.BAD_REQUEST,
-              error: 'Cannot send request to self',
-            },
-            HttpStatus.BAD_REQUEST,
-          ),
-      );
+      return handleError(HttpStatus.BAD_REQUEST, 'Cannot send request to self');
     }
 
     return this.findUserById(receiverIdInt).pipe(
@@ -188,7 +127,10 @@ export class UserService {
         return this.hasRequestBeenSentOrReceived(creator, receiver).pipe(
           switchMap((hasRequestBeenSentOrReceived: boolean) => {
             if (hasRequestBeenSentOrReceived) {
-              return of({ error: 'Request already sent or received' });
+              return handleError(
+                HttpStatus.BAD_REQUEST,
+                'Friend request already sent or received',
+              );
             }
             return from(
               this.friendRequestRepository.save({
@@ -220,7 +162,10 @@ export class UserService {
         ).pipe(
           switchMap((friendRequest: FriendRequest) => {
             if (!friendRequest) {
-              return of({ status: 'NOT-SENT' as FriendRequest_Status });
+              return handleError(
+                HttpStatus.NOT_FOUND,
+                'Friend request not found',
+              );
             }
 
             if (friendRequest.receiver?.id === user.id) {
@@ -245,20 +190,12 @@ export class UserService {
         status: statusResponse,
       }),
     ).pipe(
-      map(() => {
-        return { status: statusResponse };
-      }),
-      catchError(() => {
-        return throwError(
-          () =>
-            new HttpException(
-              {
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'Friend request response failed',
-              },
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            ),
-        );
+      switchMap((updateResult: UpdateResult) => {
+        console.log('updateResult : ', updateResult);
+        if (updateResult.affected === 1) {
+          return of({ status: statusResponse });
+        }
+        return handleError(HttpStatus.NOT_FOUND, 'Friend request not found');
       }),
     );
   }

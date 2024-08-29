@@ -1,7 +1,14 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { map, Observable } from 'rxjs';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { AuthService } from 'src/auth/services/auth.service';
 import { FeedService } from '../services/feed.service';
+import { handleError } from 'src/core/error.utils';
+import { FeedPost } from '../models/post.interface';
 
 @Injectable()
 export class IsCreatorGuard implements CanActivate {
@@ -19,8 +26,16 @@ export class IsCreatorGuard implements CanActivate {
     if (!user || !postId) return false;
     if (user.role === 'admin') return true; // Admin can do anything
 
-    return this.feedService
-      .findPostById(+postId)
-      .pipe(map((post) => post.author.id === user.id));
+    return this.feedService.findPostById(+postId).pipe(
+      switchMap((feedPost: FeedPost) => {
+        if (feedPost.author.id !== user.id) {
+          return handleError(
+            HttpStatus.NOT_FOUND,
+            'You are not the creator of this post',
+          );
+        }
+        return of(true);
+      }),
+    );
   }
 }

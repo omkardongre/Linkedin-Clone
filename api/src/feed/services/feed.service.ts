@@ -1,12 +1,13 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { FeedPostEntity } from '../models/post.entity';
-import { Repository } from 'typeorm/repository/Repository';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FeedPost } from '../models/post.interface';
-import { Observable, from, throwError } from 'rxjs';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { Observable, from, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { User } from 'src/auth/models/user.interface';
-import { catchError, map } from 'rxjs/operators';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm/repository/Repository';
+import { FeedPostEntity } from '../models/post.entity';
+import { FeedPost } from '../models/post.interface';
+import { handleError } from 'src/core/error.utils';
 
 @Injectable()
 export class FeedService {
@@ -26,14 +27,11 @@ export class FeedService {
         relations: ['author'],
       }),
     ).pipe(
-      catchError(() => {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'Error fetching posts',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+      switchMap((feedPosts: FeedPost[]) => {
+        if (!feedPosts.length) {
+          return handleError(HttpStatus.NOT_FOUND, 'No records found');
+        }
+        return of(feedPosts);
       }),
     );
   }
@@ -42,12 +40,9 @@ export class FeedService {
     feedPost.author = user;
     return from(this.feedPostRepository.save(feedPost)).pipe(
       catchError(() => {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'Error creating post',
-          },
+        return handleError(
           HttpStatus.INTERNAL_SERVER_ERROR,
+          'Error creating post',
         );
       }),
     );
@@ -55,41 +50,38 @@ export class FeedService {
 
   findAllPosts(): Observable<FeedPost[]> {
     return from(this.feedPostRepository.find()).pipe(
-      catchError(() => {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'Error fetching all posts',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+      switchMap((feedPosts: FeedPost[]) => {
+        if (!feedPosts.length) {
+          return handleError(HttpStatus.NOT_FOUND, 'No records found');
+        }
+        return of(feedPosts);
       }),
     );
   }
 
   updatePost(id: number, feedPost: FeedPost): Observable<UpdateResult> {
     return from(this.feedPostRepository.update(id, feedPost)).pipe(
-      catchError(() => {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'Error updating post',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+      switchMap((updateResult: UpdateResult) => {
+        if (updateResult.affected === 0) {
+          return handleError(HttpStatus.NOT_FOUND, 'Post not found');
+        }
+        return of(updateResult);
       }),
     );
   }
 
   deletePost(id: number): Observable<DeleteResult> {
     return from(this.feedPostRepository.delete(id)).pipe(
+      switchMap((deleteResult: DeleteResult) => {
+        if (deleteResult.affected === 0) {
+          return handleError(HttpStatus.NOT_FOUND, 'Post not found');
+        }
+        return of(deleteResult);
+      }),
       catchError(() => {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'Error deleting post',
-          },
+        return handleError(
           HttpStatus.INTERNAL_SERVER_ERROR,
+          'Error deleting post',
         );
       }),
     );
@@ -102,26 +94,11 @@ export class FeedService {
         relations: ['author'],
       }),
     ).pipe(
-      map((post) => {
-        if (!post) {
-          throw new HttpException(
-            {
-              statusCode: HttpStatus.NOT_FOUND,
-              error: 'Post not found',
-            },
-            HttpStatus.NOT_FOUND,
-          );
+      switchMap((feedPost: FeedPost) => {
+        if (!feedPost) {
+          return handleError(HttpStatus.NOT_FOUND, 'Post not found');
         }
-        return post;
-      }),
-      catchError(() => {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'Error fetching post',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        return of(feedPost);
       }),
     );
   }

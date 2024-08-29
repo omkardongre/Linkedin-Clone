@@ -47,6 +47,7 @@ export class FeedController {
     @Param('id') id: number,
     @Body() feedPost: FeedPost,
   ): Observable<UpdateResult> {
+    console.log('feedPost', feedPost);
     return this.feedService.updatePost(id, feedPost);
   }
 

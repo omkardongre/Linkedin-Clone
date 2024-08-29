@@ -1,5 +1,13 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { from, map, Observable, switchMap, catchError, throwError } from 'rxjs';
+import {
+  from,
+  map,
+  Observable,
+  switchMap,
+  catchError,
+  throwError,
+  of,
+} from 'rxjs';
 import { hash } from 'bcrypt';
 import { User } from '../models/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +15,7 @@ import { UserEntity } from '../models/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { handleError } from 'src/core/error.utils';
 
 @Injectable()
 export class AuthService {
@@ -19,15 +28,9 @@ export class AuthService {
   hashPassword(password: string): Observable<string> {
     return from(hash(password, 12)).pipe(
       catchError(() => {
-        return throwError(
-          () =>
-            new HttpException(
-              {
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: { message: 'Password hashing failed' },
-              },
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            ),
+        return handleError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'Password hashing failed',
         );
       }),
     );
@@ -47,29 +50,8 @@ export class AuthService {
             return user;
           }),
           catchError(() => {
-            return throwError(
-              () =>
-                new HttpException(
-                  {
-                    statusCode: HttpStatus.BAD_REQUEST,
-                    error: 'Registration failed',
-                  },
-                  HttpStatus.BAD_REQUEST,
-                ),
-            );
+            return handleError(HttpStatus.BAD_REQUEST, 'Registration failed');
           }),
-        );
-      }),
-      catchError(() => {
-        return throwError(
-          () =>
-            new HttpException(
-              {
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'Registration process failed',
-              },
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            ),
         );
       }),
     );
@@ -84,30 +66,15 @@ export class AuthService {
     ).pipe(
       switchMap((user: User) => {
         if (!user) {
-          return throwError(
-            () =>
-              new HttpException(
-                {
-                  statusCode: HttpStatus.NOT_FOUND,
-                  error: 'Invalid Credential',
-                },
-                HttpStatus.NOT_FOUND,
-              ),
-          );
+          return handleError(HttpStatus.NOT_FOUND, 'Invalid Credential');
         }
         return from(bcrypt.compare(password, user.password)).pipe(
-          map((isValid: boolean) => {
+          switchMap((isValid: boolean) => {
             if (isValid) {
               delete user.password;
-              return user;
+              return of(user);
             } else {
-              throw new HttpException(
-                {
-                  statusCode: HttpStatus.UNAUTHORIZED,
-                  error: { message: 'Invalid password' },
-                },
-                HttpStatus.UNAUTHORIZED,
-              );
+              return handleError(HttpStatus.UNAUTHORIZED, 'Invalid password');
             }
           }),
         );

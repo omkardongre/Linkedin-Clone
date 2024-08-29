@@ -10,6 +10,8 @@ import {
   Param,
   Put,
   Body,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -28,7 +30,7 @@ import {
   FriendRequest,
   FriendRequestStatus,
 } from '../models/friend-request.interface';
-
+import { handleError } from 'src/core/error.utils';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -39,43 +41,39 @@ export class UserController {
   uploadImage(
     @UploadedFile() file: Express.Multer.File,
     @Request() req,
-  ): Observable<{ modifiedFileName: string } | { error: string }> {
+  ): Observable<{ modifiedFileName: string }> {
     const filename = file?.filename;
     if (!filename) {
-      return of({ error: 'No file uploaded' });
+      console.log('1file', file.filename);
+      return handleError(HttpStatus.BAD_REQUEST, 'No file uploaded');
     }
 
     const imagesFolderPath = join(process.cwd(), 'images');
     const fullImagePath = join(imagesFolderPath, filename);
 
     return isFileExtensionValid(fullImagePath).pipe(
-      switchMap((isValid) => {
+      switchMap((isValid: boolean) => {
         if (!isValid) {
           removeFile(fullImagePath);
-          return of({ error: 'File content does not match extension' });
+          return handleError(
+            HttpStatus.BAD_REQUEST,
+            'File content does not match extension',
+          );
         }
-        return this.userService.updateUserByImage(req.user.id, filename).pipe(
-          switchMap((updateResult: UpdateResult) => {
-            if (updateResult.affected === 1) {
-              return of({ modifiedFileName: filename });
-            }
-            removeFile(fullImagePath);
-            return of({ error: 'User image update failed' });
-          }),
-        );
+        return this.userService.updateUserByImage(req.user.id, filename);
       }),
     );
   }
 
-  @UseGuards(JwtGuard)
-  @Get('image')
-  findImage(@Request() req, @Response() res) {
-    return this.userService.findImageNameByUserId(req.user.id).pipe(
-      switchMap((imageName: string) => {
-        return of(res.sendFile(imageName, { root: 'images' }));
-      }),
-    );
-  }
+  // @UseGuards(JwtGuard)
+  // @Get('image')
+  // findImage(@Request() req, @Response() res): Observable<Response> {
+  //   return this.userService.findImageNameByUserId(req.user.id).pipe(
+  //     switchMap((imageName: string) => {
+  //       return of(res.sendFile(imageName, { root: 'images' }));
+  //     }),
+  //   );
+  // }
 
   @UseGuards(JwtGuard)
   @Get('image-name')
@@ -99,11 +97,10 @@ export class UserController {
   sendConnectionRequest(
     @Param('receiverId') receiverId: string,
     @Request() req,
-  ): Observable<FriendRequest | { error: string }> {
+  ): Observable<FriendRequest> {
     const receiverIdInt = parseInt(receiverId);
     return this.userService.sendFriendRequest(receiverIdInt, req.user);
   }
-
 
   @UseGuards(JwtGuard)
   @Get('friend-request/status/:receiverId')
