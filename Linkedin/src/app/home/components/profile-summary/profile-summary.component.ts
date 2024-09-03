@@ -13,6 +13,7 @@ import { Role } from "src/app/auth/models/user.model";
 import { AuthService } from "src/app/auth/services/auth.service";
 import filetypeinfo from "magic-bytes.js";
 import { BehaviorSubject, Subscription, take } from "rxjs";
+import { ErrorHandlerService } from "src/app/core/error.handler.service";
 
 type ValidFileExtension = "png" | "jpg" | "jpeg";
 type ValidMimeType = "image/png" | "image/jpg" | "image/jpeg";
@@ -39,7 +40,10 @@ export class ProfileSummaryComponent implements OnInit, OnDestroy {
 
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private errorHandlerService: ErrorHandlerService,
+  ) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -107,30 +111,26 @@ export class ProfileSummaryComponent implements OnInit, OnDestroy {
   private detectFileType(arrayBuffer: ArrayBuffer, file: File) {
     const uint8Array = new Uint8Array(arrayBuffer);
     const fileType = filetypeinfo(uint8Array)[0];
-
     if (
       fileType &&
       this.validMimeTypes.includes(fileType.mime as ValidMimeType)
     ) {
       this.uploadFile(file);
     } else {
-      console.error("Invalid file type");
+      this.errorHandlerService.presentErrorToast("Invalid file type");
     }
   }
 
   private uploadFile(file: File) {
     const formData = new FormData();
     formData.append("file", file);
-    this.authService.uploadUserImage(formData).subscribe({
-      next: (response) => {
+    this.authService
+      .uploadUserImage(formData)
+      .subscribe((response: { modifiedFileName: string }) => {
         this.authService
           .updateUserImagePath(response.modifiedFileName)
           .subscribe();
-      },
-      error: (error) => {
-        console.error("Error uploading file:", error);
-      },
-    });
+      });
   }
 
   ngOnDestroy() {

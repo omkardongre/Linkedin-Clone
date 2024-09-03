@@ -10,6 +10,8 @@ import {
 import { IonicModule, NavController } from "@ionic/angular";
 import { AuthService } from "../../services/auth.service";
 import { NewUser } from "../../models/newUser.model";
+import { User } from "../../models/user.model";
+import { ErrorHandlerService } from "src/app/core/error.handler.service";
 
 @Component({
   selector: "app-signup",
@@ -26,6 +28,7 @@ export class SignupPage implements OnInit {
     private formBuilder: FormBuilder,
     private navCtrl: NavController,
     private authService: AuthService,
+    private errorHandlerService: ErrorHandlerService,
   ) {
     this.signupForm = this.formBuilder.group({
       firstName: ["", [Validators.required, Validators.minLength(2)]],
@@ -41,23 +44,21 @@ export class SignupPage implements OnInit {
     if (this.signupForm.valid) {
       const newUser: NewUser = this.signupForm.value;
 
-      this.authService.register(newUser).subscribe(
-        (user) => {
-          this.authService.login(newUser.email, newUser.password).subscribe(
-            (response: { token: string }) => {
-              this.navCtrl.navigateRoot("/home");
-            },
-            (error) => {
-              console.log("Error logging in after registration");
-            },
-          );
-        },
-        (error) => {
-          console.log("Error registering user");
-        },
-      );
+      this.authService.register(newUser).subscribe((user: User) => {
+        if (!user) {
+          this.errorHandlerService.handleError<User>("register");
+          return;
+        }
+        this.authService
+          .login(newUser.email, newUser.password)
+          .subscribe(() => {
+            this.navCtrl.navigateRoot("/home");
+          });
+      });
     } else {
-      console.log("Form is not valid");
+      this.errorHandlerService.presentErrorToast(
+        "Please fill in correct details",
+      );
     }
   }
 

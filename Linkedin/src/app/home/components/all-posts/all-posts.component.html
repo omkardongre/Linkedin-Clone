@@ -1,4 +1,4 @@
-<ion-content [scrollEvents]="true">
+<ion-content *ngIf="posts.length > 0" [scrollEvents]="true">
   <ion-list>
     <ion-card *ngFor="let post of posts">
       <ion-card-header>

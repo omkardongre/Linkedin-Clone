@@ -81,36 +81,29 @@ export class AllPostsComponent implements OnInit {
     if (!post) return;
 
     this.postService.createPost(post).subscribe((post: Post) => {
-      this.authService
-        .getUserImageName()
-        .subscribe((response: { imageName: string }) => {
-          const doesAuthHasImage = !!response.imageName;
-          let fullImagePath = this.authService.getFullImagePath(
-            response.imageName,
-          );
-          post.fullImagePath = fullImagePath;
-        });
+      this.authService.userFullImagePath.subscribe((imagePath: string) => {
+        post.fullImagePath = imagePath;
+      });
       this.posts.unshift(post);
     });
   }
 
   getPosts(event: IonInfiniteScrollCustomEvent<any> | undefined) {
-    if (this.skipPosts > 4) {
+    if (this.skipPosts > 2) {
       this.infiniteScroll.disabled = true;
     }
     this.queryParams = `?take=${this.numberOfPosts}&skip=${this.skipPosts}`;
     this.postService
       .getSelectedPosts(this.queryParams)
       .subscribe((posts: Post[]) => {
-        this.posts.push(...posts);
-
-        for (let i = 0; i < this.posts.length; i++) {
-          const fullImagePath = this.authService.getFullImagePath(
-            this.posts[i].author.imagePath,
-          );
-          this.posts[i].fullImagePath = fullImagePath;
-        }
-
+        this.posts = this.posts.concat(
+          posts.map((post) => ({
+            ...post,
+            fullImagePath: this.authService.getFullImagePath(
+              post.author.imagePath,
+            ),
+          })),
+        );
         if (event) {
           event.target.complete();
         }

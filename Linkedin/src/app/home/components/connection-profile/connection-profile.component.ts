@@ -74,25 +74,21 @@ export class ConnectionProfileComponent implements OnInit, OnDestroy {
     this.friendRequest!.status = "PENDING";
     return this.connectionProfileService
       .addConnectionUser(this.friendUserId)
-      .subscribe(
-        (next) => {
-          console.log("Request sent");
-        },
-        (error) => {
-          console.log("Request failed to send");
-        },
-      );
+
+      .subscribe(() => {
+        this.friendRequest!.status = "PENDING";
+      });
   }
 
-  getUser(): Observable<User> {
-    return this.connectionProfileService.getConnectionUser(this.friendUserId);
-  }
+  // getUser(): Observable<User> {
+  //   return this.connectionProfileService.getConnectionUser(this.friendUserId);
+  // }
 
-  getFriendRequestStatus(): Observable<FriendRequestStatus> {
-    return this.connectionProfileService.getFriendRequestStatus(
-      this.friendUserId,
-    );
-  }
+  // getFriendRequestStatus(): Observable<FriendRequestStatus> {
+  //   return this.connectionProfileService.getFriendRequestStatus(
+  //     this.friendUserId,
+  //   );
+  // }
 
   handleFriendRequest(status: FriendRequestResponse) {
     this.connectionProfileService

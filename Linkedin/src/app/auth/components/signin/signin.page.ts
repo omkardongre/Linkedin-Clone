@@ -9,6 +9,7 @@ import { IonicModule, ToastController } from "@ionic/angular";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { CommonModule } from "@angular/common";
+import { ErrorHandlerService } from "src/app/core/error.handler.service";
 
 @Component({
   selector: "app-signin",
@@ -27,6 +28,7 @@ export class SigninPage implements OnInit {
     private router: Router,
     private authService: AuthService,
     private toastController: ToastController,
+    private errorHandlerService: ErrorHandlerService,
   ) {
     this.signinForm = this.formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
@@ -49,17 +51,13 @@ export class SigninPage implements OnInit {
     if (this.signinForm.valid) {
       const { email, password } = this.signinForm.value;
 
-      this.authService.login(email, password).subscribe({
-        next: (response: { token: string }) => {
-          this.router.navigate(["/home"]);
-          this.presentToast("Login successful!", 2000);
-        },
-        error: (error) => {
-          this.presentToast("Login failed. Please try again.", 2000);
-        },
+      this.authService.login(email, password).subscribe((response) => {
+        this.router.navigate(["/home"]);
       });
     } else {
-      this.presentToast("Please fill in all required fields.", 2000);
+      this.errorHandlerService.presentErrorToast(
+        "Please fill in all required fields.",
+      );
     }
   }
 

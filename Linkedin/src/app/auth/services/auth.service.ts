@@ -5,6 +5,7 @@ import { environment } from "src/environments/environment.prod";
 import { Role, User } from "../models/user.model";
 import {
   BehaviorSubject,
+  catchError,
   filter,
   from,
   map,
@@ -17,6 +18,7 @@ import {
 import { Storage } from "@capacitor/storage";
 import { UserResponse } from "../models/userResponse.model";
 import { jwtDecode } from "jwt-decode";
+import { ErrorHandlerService } from "src/app/core/error.handler.service";
 
 @Injectable({
   providedIn: "root",
@@ -25,7 +27,10 @@ export class AuthService {
   // purpose : To guard routes
   private $user = new BehaviorSubject<User | null>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private errorHandlerService: ErrorHandlerService,
+  ) {}
 
   get isUserLoggedIn(): Observable<boolean> {
     return this.$user.asObservable().pipe(
@@ -77,7 +82,11 @@ export class AuthService {
           await Storage.set({ key: "token", value: response.token });
           const decodedToken: UserResponse = jwtDecode(response.token);
           this.$user.next(decodedToken.user);
+          this.errorHandlerService.presentSuccessToast("User logged in");
         }),
+        catchError(
+          this.errorHandlerService.handleError<{ token: string }>("login"),
+        ),
       );
   }
 
@@ -86,7 +95,11 @@ export class AuthService {
       .post<User>(`${environment.baseApiUrl}/auth/register`, user)
       .pipe(
         take(1),
-        tap((user: User) => this.$user.next(user)),
+        tap((user: User) => {
+          this.$user.next(user);
+          this.errorHandlerService.presentSuccessToast("User registered");
+        }),
+        catchError(this.errorHandlerService.handleError<User>("register")),
       );
   }
 
@@ -132,28 +145,34 @@ export class AuthService {
     return `${environment.baseApiUrl}/feed/image/${imageName}`;
   }
 
-  getUserImage() {
-    return this.http.get(`${environment.baseApiUrl}/user/image`).pipe(take(1));
-  }
+  // getUserImage() {
+  //   return this.http.get(`${environment.baseApiUrl}/user/image`).pipe(take(1));
+  // }
 
   getUserImageName(): Observable<{ imageName: string }> {
     return this.http
       .get<{ imageName: string }>(`${environment.baseApiUrl}/user/image-name`)
-      .pipe(take(1));
+      .pipe(
+        take(1),
+        catchError(
+          this.errorHandlerService.handleError<{ imageName: string }>(
+            "getUserImageName",
+          ),
+        ),
+      );
   }
 
   updateUserImagePath(imagePath: string): Observable<User> {
     return this.$user.pipe(
       take(1),
-      map((user: User | null) => {
-        if (!user) {
-          throw new Error("User is not logged in");
-        }
-
+      filter((user: User | null): user is User => user !== null),
+      tap((user: User) => {
         user.imagePath = imagePath;
         this.$user.next(user);
-        return user;
       }),
+      catchError(
+        this.errorHandlerService.handleError<User>("updateUserImagePath"),
+      ),
     );
   }
 
@@ -164,6 +183,13 @@ export class AuthService {
       .post<{
         modifiedFileName: string;
       }>(`${environment.baseApiUrl}/user/upload`, formData)
-      .pipe(take(1));
+      .pipe(
+        take(1),
+        catchError(
+          this.errorHandlerService.handleError<{ modifiedFileName: string }>(
+            "uploadUserImage",
+          ),
+        ),
+      );
   }
 }
