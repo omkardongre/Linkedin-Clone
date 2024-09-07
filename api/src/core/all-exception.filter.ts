@@ -17,7 +17,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response: Response = ctx.getResponse();
     const request: Request = ctx.getRequest();
-    console.log('exception', exception);
     let status: HttpStatus;
     let errorMessage: string;
 
@@ -71,7 +70,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
   };
 
   private writeErrorLogToFile(errorLog: string) {
-    // console.log('file is written');
     fs.appendFile('error.log', errorLog, (err) => {
       if (err) {
         throw err;

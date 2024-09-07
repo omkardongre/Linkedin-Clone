@@ -47,7 +47,6 @@ export class FeedController {
     @Param('id') id: number,
     @Body() feedPost: FeedPost,
   ): Observable<UpdateResult> {
-    console.log('feedPost', feedPost);
     return this.feedService.updatePost(id, feedPost);
   }
 
@@ -59,7 +58,7 @@ export class FeedController {
 
   @Get('image/:filename')
   findImage(@Param('filename') filename, @Response() res) {
-    if (!filename) {
+    if (!this.feedService.fileExists(filename)) {
       return res.status(404).send('File not found');
     }
 

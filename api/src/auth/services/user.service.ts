@@ -191,7 +191,6 @@ export class UserService {
       }),
     ).pipe(
       switchMap((updateResult: UpdateResult) => {
-        console.log('updateResult : ', updateResult);
         if (updateResult.affected === 1) {
           return of({ status: statusResponse });
         }

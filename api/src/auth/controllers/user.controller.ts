@@ -6,11 +6,9 @@ import {
   UseInterceptors,
   Request,
   Get,
-  Response,
   Param,
   Put,
   Body,
-  HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
@@ -22,7 +20,6 @@ import {
   saveImageToStorage,
 } from '../helpers/image-storage';
 import { Observable, of } from 'rxjs';
-import { UpdateResult } from 'typeorm';
 import { join } from 'path';
 import { switchMap } from 'rxjs/operators';
 import { User } from '../models/user.interface';
@@ -40,11 +37,10 @@ export class UserController {
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
   uploadImage(
     @UploadedFile() file: Express.Multer.File,
-    @Request() req,
+    @Request() req: any,
   ): Observable<{ modifiedFileName: string }> {
     const filename = file?.filename;
     if (!filename) {
-      console.log('1file', file.filename);
       return handleError(HttpStatus.BAD_REQUEST, 'No file uploaded');
     }
 
@@ -65,19 +61,9 @@ export class UserController {
     );
   }
 
-  // @UseGuards(JwtGuard)
-  // @Get('image')
-  // findImage(@Request() req, @Response() res): Observable<Response> {
-  //   return this.userService.findImageNameByUserId(req.user.id).pipe(
-  //     switchMap((imageName: string) => {
-  //       return of(res.sendFile(imageName, { root: 'images' }));
-  //     }),
-  //   );
-  // }
-
   @UseGuards(JwtGuard)
   @Get('image-name')
-  findUserImageName(@Request() req): Observable<{ imageName: string }> {
+  findUserImageName(@Request() req: any): Observable<{ imageName: string }> {
     return this.userService.findImageNameByUserId(req.user.id).pipe(
       switchMap((imageName: string) => {
         return of({ imageName });
@@ -96,7 +82,7 @@ export class UserController {
   @Post('friend-request/send/:receiverId')
   sendConnectionRequest(
     @Param('receiverId') receiverId: string,
-    @Request() req,
+    @Request() req: any,
   ): Observable<FriendRequest> {
     const receiverIdInt = parseInt(receiverId);
     return this.userService.sendFriendRequest(receiverIdInt, req.user);
@@ -128,7 +114,9 @@ export class UserController {
 
   @UseGuards(JwtGuard)
   @Get('friend-request/me/received-requests')
-  getFriendRequestsFromRecipients(@Request() req): Observable<FriendRequest[]> {
+  getFriendRequestsFromRecipients(
+    @Request() req: any,
+  ): Observable<FriendRequest[]> {
     return this.userService.getFriendRequestsFromRecipients(req.user);
   }
 

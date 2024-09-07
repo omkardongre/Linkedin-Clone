@@ -8,7 +8,8 @@ import { Repository } from 'typeorm/repository/Repository';
 import { FeedPostEntity } from '../models/post.entity';
 import { FeedPost } from '../models/post.interface';
 import { handleError } from 'src/core/error.utils';
-
+import * as fs from 'fs';
+import * as path from 'path';
 @Injectable()
 export class FeedService {
   constructor(
@@ -101,5 +102,10 @@ export class FeedService {
         return of(feedPost);
       }),
     );
+  }
+
+  fileExists(filename: string): boolean {
+    const filePath = path.join(__dirname, '../../images', filename);
+    return fs.existsSync(filePath);
   }
 }

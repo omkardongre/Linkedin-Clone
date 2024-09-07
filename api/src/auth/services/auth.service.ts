@@ -1,13 +1,5 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import {
-  from,
-  map,
-  Observable,
-  switchMap,
-  catchError,
-  throwError,
-  of,
-} from 'rxjs';
+import { Injectable, HttpStatus } from '@nestjs/common';
+import { from, map, Observable, switchMap, catchError, of } from 'rxjs';
 import { hash } from 'bcrypt';
 import { User } from '../models/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
