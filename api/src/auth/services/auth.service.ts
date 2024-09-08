@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { from, map, Observable, switchMap, catchError, of } from 'rxjs';
 import { hash } from 'bcrypt';
 import { User } from '../models/user.interface';
@@ -29,21 +29,30 @@ export class AuthService {
   }
 
   registerAccount(user: User): Observable<User> {
-    return this.hashPassword(user.password).pipe(
+    return from(
+      this.userRepository.findOne({ where: { email: user.email } }),
+    ).pipe(
+      switchMap((existingUser: User) => {
+        if (existingUser) {
+          return handleError(HttpStatus.CONFLICT, 'User already exists');
+        }
+        return this.hashPassword(user.password);
+      }),
       switchMap((hashedPassword: string) => {
-        return from(
-          this.userRepository.save({
-            ...user,
-            password: hashedPassword,
-          }),
-        ).pipe(
-          map((user: User) => {
-            delete user.password;
-            return user;
-          }),
-          catchError(() => {
-            return handleError(HttpStatus.BAD_REQUEST, 'Registration failed');
-          }),
+        const newUser = { ...user, password: hashedPassword };
+        return from(this.userRepository.save(newUser));
+      }),
+      map((savedUser: User) => {
+        delete savedUser.password;
+        return savedUser;
+      }),
+      catchError((error) => {
+        if (error instanceof HttpException) {
+          return handleError(error.getStatus(), error.message);
+        }
+        return handleError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'An unexpected error occurred',
         );
       }),
     );
@@ -58,7 +67,7 @@ export class AuthService {
     ).pipe(
       switchMap((user: User) => {
         if (!user) {
-          return handleError(HttpStatus.NOT_FOUND, 'Invalid Credential');
+          return handleError(HttpStatus.NOT_FOUND, 'Email not found');
         }
         return from(bcrypt.compare(password, user.password)).pipe(
           switchMap((isValid: boolean) => {
