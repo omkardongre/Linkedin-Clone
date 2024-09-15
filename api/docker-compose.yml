@@ -13,6 +13,18 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  postgres-test:
+    image: postgres:latest
+    container_name: postgres-test
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: linkedintest
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+
   adminer:
     image: adminer:latest
     container_name: adminer
@@ -23,3 +35,4 @@ services:
 
 volumes:
   postgres-data:
+  postgres-test-data:
