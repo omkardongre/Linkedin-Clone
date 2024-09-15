@@ -105,7 +105,7 @@ export class FeedService {
   }
 
   fileExists(filename: string): boolean {
-    const filePath = path.join(__dirname, '../../images', filename);
+    const filePath = path.join(__dirname, '../../../images', filename);
     return fs.existsSync(filePath);
   }
 }

@@ -25,6 +25,7 @@ describe('UserService', () => {
     firstName: 'John',
     lastName: 'Doe',
     role: Role.USER,
+    imagePath: null,
   };
 
   beforeEach(async () => {
@@ -140,6 +141,8 @@ describe('UserService', () => {
         generatedMaps: [],
       };
 
+      jest.spyOn(userRepositoryMock, 'findOne').mockReturnValue(of(mockUser));
+
       jest
         .spyOn(userRepositoryMock, 'update')
         .mockReturnValue(of(updateResult));
@@ -160,6 +163,8 @@ describe('UserService', () => {
         raw: {},
         generatedMaps: [],
       };
+
+      jest.spyOn(userRepositoryMock, 'findOne').mockReturnValue(of(mockUser));
 
       jest
         .spyOn(userRepositoryMock, 'update')

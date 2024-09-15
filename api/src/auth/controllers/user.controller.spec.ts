@@ -225,14 +225,17 @@ describe('UserController', () => {
 
   describe('getConnectionRequest', () => {
     it('should get a connection request', (done) => {
-      const mockUser1Id = '1';
-      const mockUser2Id = '2';
+      const mockFriendId = '2';
+      const mockRequest = { user: { id: 1 } };
 
       userController
-        .getConnectionRequest(mockUser1Id, mockUser2Id)
+        .getConnectionRequest(mockFriendId, mockRequest)
         .subscribe((result) => {
           expect(result).toEqual(mockFriendRequest);
-          expect(userService.findFriendRequest).toHaveBeenCalledWith(1, 2);
+          expect(userService.findFriendRequest).toHaveBeenCalledWith(
+            mockRequest.user.id,
+            parseInt(mockFriendId),
+          );
           done();
         });
     });

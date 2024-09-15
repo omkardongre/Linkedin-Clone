@@ -94,7 +94,7 @@ describe('AuthService', () => {
   describe('registerAccount', () => {
     it('should register a new account', (done) => {
       const hashedPassword = 'hashedPassword';
-
+      jest.spyOn(userRepositoryMock, 'findOne').mockReturnValue(of(null));
       jest
         .spyOn(authService, 'hashPassword')
         .mockReturnValue(of(hashedPassword));
@@ -115,6 +115,7 @@ describe('AuthService', () => {
     it('should handle registration failure', (done) => {
       const hashedPassword = 'hashedPassword';
 
+      jest.spyOn(userRepositoryMock, 'findOne').mockReturnValue(of(null));
       jest
         .spyOn(authService, 'hashPassword')
         .mockReturnValue(of(hashedPassword));
@@ -123,15 +124,31 @@ describe('AuthService', () => {
         .mockReturnValue(
           throwError(
             () =>
-              new HttpException('Registration failed', HttpStatus.BAD_REQUEST),
+              new HttpException(
+                'An unexpected error occurred',
+                HttpStatus.INTERNAL_SERVER_ERROR,
+              ),
           ),
         );
 
       authService.registerAccount(mockUser).subscribe({
         next: () => {},
         error: (error) => {
-          expect(error.status).toBe(HttpStatus.BAD_REQUEST);
-          expect(error.message).toBe('Registration failed');
+          expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+          expect(error.message).toBe('An unexpected error occurred');
+          done();
+        },
+      });
+    });
+
+    it('should handle user already exists', (done) => {
+      jest.spyOn(userRepositoryMock, 'findOne').mockReturnValue(of(mockUser));
+
+      authService.registerAccount(mockUser).subscribe({
+        next: () => {},
+        error: (error) => {
+          expect(error.status).toBe(HttpStatus.CONFLICT);
+          expect(error.message).toBe('User already exists');
           done();
         },
       });
@@ -162,7 +179,7 @@ describe('AuthService', () => {
         next: () => {},
         error: (error) => {
           expect(error.status).toBe(HttpStatus.NOT_FOUND);
-          expect(error.message).toBe('Invalid Credential');
+          expect(error.message).toBe('Email not found');
           done();
         },
       });
