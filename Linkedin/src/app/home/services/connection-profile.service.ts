@@ -78,13 +78,10 @@ export class ConnectionProfileService {
       );
   }
 
-  getFriendRequest(
-    senderId: number,
-    receiverId: number,
-  ): Observable<FriendRequest> {
+  getFriendRequest(friendId: number): Observable<FriendRequest> {
     return this.http
       .get<FriendRequest>(
-        `${environment.baseApiUrl}/user/friend-request/${senderId}/${receiverId}`,
+        `${environment.baseApiUrl}/user/friend-request/between/${friendId}`,
       )
       .pipe(
         take(1),

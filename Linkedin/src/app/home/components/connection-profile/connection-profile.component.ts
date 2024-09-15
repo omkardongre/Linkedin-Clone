@@ -55,7 +55,7 @@ export class ConnectionProfileComponent implements OnInit, OnDestroy {
     // });
 
     this.connectionProfileService
-      .getFriendRequest(this.userId, this.friendUserId)
+      .getFriendRequest(this.friendUserId)
       .subscribe((friendRequest: FriendRequest) => {
         this.friendRequest = friendRequest;
         if (friendRequest.creator?.id === this.userId) {
