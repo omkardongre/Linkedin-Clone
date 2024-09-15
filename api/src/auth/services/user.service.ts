@@ -11,6 +11,8 @@ import {
 } from '../models/friend-request.interface';
 import { FriendRequestEntity } from '../models/friend-request.entity';
 import { handleError } from 'src/core/error.utils';
+import { join } from 'node:path';
+import { removeFile } from '../helpers/image-storage';
 
 @Injectable()
 export class UserService {
@@ -64,17 +66,30 @@ export class UserService {
     imagePath: string,
   ): Observable<{ modifiedFileName: string }> {
     return from(
-      this.userRepository.update(id, {
-        imagePath,
+      this.userRepository.findOne({
+        where: { id },
       }),
     ).pipe(
-      switchMap((updateResult: UpdateResult) => {
-        if (updateResult.affected === 1) {
-          return of({ modifiedFileName: imagePath });
+      switchMap((user: User) => {
+        if (user.imagePath !== null) {
+          const imagesFolderPath = join(process.cwd(), 'images');
+          const fullImagePath = join(imagesFolderPath, user.imagePath);
+          removeFile(fullImagePath);
         }
-        return handleError(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          'Failed to update user image',
+        return from(
+          this.userRepository.update(id, {
+            imagePath,
+          }),
+        ).pipe(
+          switchMap((updateResult: UpdateResult) => {
+            if (updateResult.affected === 1) {
+              return of({ modifiedFileName: imagePath });
+            }
+            return handleError(
+              HttpStatus.INTERNAL_SERVER_ERROR,
+              'Failed to update user image',
+            );
+          }),
         );
       }),
     );
