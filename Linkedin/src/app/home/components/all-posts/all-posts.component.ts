@@ -6,6 +6,7 @@ import {
   SimpleChange,
   SimpleChanges,
   ViewChild,
+  OnChanges,
 } from "@angular/core";
 import {
   InfiniteScrollCustomEvent,
@@ -41,7 +42,7 @@ import { RouterModule } from "@angular/router";
   standalone: true,
   imports: [IonicModule, CommonModule, RouterModule],
 })
-export class AllPostsComponent implements OnInit {
+export class AllPostsComponent implements OnInit, OnChanges {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
   private postService = inject(PostService);
   private modalController = inject(ModalController);

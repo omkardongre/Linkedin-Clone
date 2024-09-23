@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { map, Observable, Subscription, switchMap, take, tap } from "rxjs";
 import { User } from "src/app/auth/models/user.model";
@@ -21,7 +21,7 @@ import { HeaderComponent } from "../header/header.component";
   standalone: true,
   imports: [IonicModule, CommonModule, HeaderComponent],
 })
-export class ConnectionProfileComponent implements OnInit, OnDestroy {
+export class ConnectionProfileComponent implements OnInit {
   userFullImagePath!: string;
   friendRequest: FriendRequest | undefined;
   friendUserId!: number;
@@ -97,6 +97,4 @@ export class ConnectionProfileComponent implements OnInit, OnDestroy {
         this.friendRequest!.status = friendRequest.status;
       });
   }
-
-  ngOnDestroy(): void {}
 }
