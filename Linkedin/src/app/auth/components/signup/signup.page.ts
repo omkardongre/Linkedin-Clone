@@ -38,8 +38,6 @@ export class SignupPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
-
   onSubmit() {
     if (this.signupForm.valid) {
       const newUser: NewUser = this.signupForm.value;

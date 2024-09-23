@@ -1,114 +1,115 @@
 .signup-container {
-    max-width: 400px;
-    height: 450px;
-    margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px; /* Optional: to add rounded corners */
-    background-color: #fff; /* Ensures the container is white */
-
-  }
-  
-  .logo {
-    width: 84px;
-    margin-bottom: 24px;
-  }
-  
-  h1 {
-    font-size: 32px;
-    font-weight: 400;
-    margin-bottom: 24px;
-    text-align: center;
-  }
-  
-  ion-item {
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    margin-bottom: 16px;
-  }
-  
-  .terms {
-    font-size: 12px;
-    color: var(--ion-color-medium);
-    margin-bottom: 16px;
-    
-    a {
-      color: var(--ion-color-primary);
-      text-decoration: none;
-    }
-  }
-  
-  .agree-join-btn {
-    margin-bottom: 16px;
-  }
-  
-  .divider {
-    text-align: center;
-    margin: 16px 0;
-    border-bottom: 1px solid var(--ion-color-light);
-    line-height: 0;
-    
-    span {
-      background: #fff;
-      padding: 0 10px;
-      color: var(--ion-color-medium);
-    }
-  }
-  
-  .google-btn {
-    --border-color: var(--ion-color-medium);
-    --color: var(--ion-color-dark);
-  }
-  
-  .signin-link {
-    text-align: center;
-    margin-top: 16px;
-    font-size: 16px;
-    
-    a {
-      color: var(--ion-color-primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-  }
-  
-  .get-help {
-    text-align: center;
-    font-size: 14px;
-    color: var(--ion-color-medium);
-    
-    a {
-      color: var(--ion-color-primary);
-      text-decoration: none;
-    }
-  }
-
-
-  ion-header, ion-toolbar {
-    height: 140px;
-    h1 {
-        margin-bottom: 0px;
-    }
-  }
-
-  @media (max-width: 550px) { /* Adjust the max-width value as per your 'md' breakpoint */
-    h1 {
-      font-size: 1.6rem; 
-    }
-  }
-
-  .logo {
-    margin: 20px;
-    margin-bottom: 0px;
-    margin-left: 30px;
-    width: 150px;
-    height: auto;
-  }
-
-  ion-content{
-    --background: #F3F2F0;
+  max-width: 400px;
+  height: 450px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; /* Optional: to add rounded corners */
+  background-color: #fff; /* Ensures the container is white */
 }
 
-ion-header, ion-toolbar {
-    --background: #F3F2F0; /* Ensures the header background is also #F3F2F0 */
+.logo {
+  width: 84px;
+  margin-bottom: 24px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 16px;
+}
+
+.terms {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  margin-bottom: 16px;
+
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
   }
+}
+
+.agree-join-btn {
+  margin-bottom: 16px;
+}
+
+.divider {
+  text-align: center;
+  margin: 16px 0;
+  border-bottom: 1px solid var(--ion-color-light);
+  line-height: 0;
+
+  span {
+    background: #fff;
+    padding: 0 10px;
+    color: var(--ion-color-medium);
+  }
+}
+
+.google-btn {
+  --border-color: var(--ion-color-medium);
+  --color: var(--ion-color-dark);
+}
+
+.signin-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 16px;
+
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+}
+
+.get-help {
+  text-align: center;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+  }
+}
+
+ion-header,
+ion-toolbar {
+  height: 140px;
+  h1 {
+    margin-bottom: 0px;
+  }
+}
+
+@media (max-width: 550px) {
+  /* Adjust the max-width value as per your 'md' breakpoint */
+  h1 {
+    font-size: 1.6rem;
+  }
+}
+
+.logo {
+  margin: 20px;
+  margin-bottom: 0px;
+  margin-left: 30px;
+  width: 150px;
+  height: auto;
+}
+
+ion-content {
+  --background: #f3f2f0;
+}
+
+ion-header,
+ion-toolbar {
+  --background: #f3f2f0; /* Ensures the header background is also #F3F2F0 */
+}

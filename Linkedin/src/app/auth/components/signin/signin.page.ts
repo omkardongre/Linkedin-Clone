@@ -36,8 +36,6 @@ export class SigninPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
-
   async presentToast(message: string, duration: number = 2000) {
     const toast = await this.toastController.create({
       message,

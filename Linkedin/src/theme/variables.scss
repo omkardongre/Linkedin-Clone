@@ -3,28 +3,28 @@
 // variables.scss
 
 // Primary Colors
-$primary-color: #0077b5;  // LinkedIn blue
-$primary-light-color: #00a0dc;  // Lighter blue used for hover states
-$primary-dark-color: #005582;  // Darker blue used for active states
+$primary-color: #0077b5; // LinkedIn blue
+$primary-light-color: #00a0dc; // Lighter blue used for hover states
+$primary-dark-color: #005582; // Darker blue used for active states
 
 // Secondary Colors
-$secondary-color: #ffffff;  // White
-$secondary-light-color: #f3f2ef;  // Light grey background
-$secondary-dark-color: #8d6f47;  // Dark color for icons
+$secondary-color: #ffffff; // White
+$secondary-light-color: #f3f2ef; // Light grey background
+$secondary-dark-color: #8d6f47; // Dark color for icons
 
 // Accent Colors
-$accent-color: #ff6a00;  // Orange for accents and highlights
+$accent-color: #ff6a00; // Orange for accents and highlights
 
 // Text Colors
-$text-color: #333333;  // Dark grey for main text
-$text-light-color: #666666;  // Lighter grey for secondary text
+$text-color: #333333; // Dark grey for main text
+$text-light-color: #666666; // Lighter grey for secondary text
 
 // Background Colors
-$background-color: #f3f2ef;  // Light grey background
-$card-background-color: #ffffff;  // White for cards and containers
+$background-color: #f3f2ef; // Light grey background
+$card-background-color: #ffffff; // White for cards and containers
 
 // Border Colors
-$border-color: #d1d1d1;  // Light grey borders
+$border-color: #d1d1d1; // Light grey borders
 
 // Shadow
 $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -51,7 +51,7 @@ $transition-duration: 0.3s;
 $transition-ease: ease-in-out;
 
 body {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
   background-color: $background-color;
   color: $text-color;
 }
