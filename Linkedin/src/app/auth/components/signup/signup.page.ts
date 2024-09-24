@@ -20,7 +20,7 @@ import { ErrorHandlerService } from "src/app/core/error.handler.service";
   standalone: true,
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
 })
-export class SignupPage implements OnInit {
+export class SignupPage {
   signupForm: FormGroup;
   showPassword: boolean = false;
 
