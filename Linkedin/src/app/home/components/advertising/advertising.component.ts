@@ -8,6 +8,6 @@ import { IonicModule } from "@ionic/angular";
   imports: [IonicModule],
   standalone: true,
 })
-export class AdvertisingComponent implements OnInit {
+export class AdvertisingComponent {
   constructor() {}
 }
