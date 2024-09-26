@@ -157,7 +157,7 @@ describe('FeedController (e2e)', () => {
         .set('Authorization', `Bearer ${jwtToken}`)
         .expect(HttpStatus.OK);
 
-      expect(response.body.affected).toBe(1);
+      expect(response.body.message).toBe('Post deleted successfully');
     });
 
     it('should not delete a non-existent post', async () => {

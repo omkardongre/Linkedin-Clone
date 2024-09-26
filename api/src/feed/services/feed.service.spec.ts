@@ -159,8 +159,8 @@ describe('FeedService', () => {
 
   describe('deletePost', () => {
     it('should delete a post', (done) => {
-      feedService.deletePost(1).subscribe((data: DeleteResult) => {
-        expect(data).toEqual(mockDeleteResult);
+      feedService.deletePost(1).subscribe((response: { message: string }) => {
+        expect(response.message).toEqual('Post deleted successfully');
         done();
       });
     });
