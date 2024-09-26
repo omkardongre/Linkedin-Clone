@@ -71,13 +71,13 @@ export class FeedService {
     );
   }
 
-  deletePost(id: number): Observable<DeleteResult> {
+  deletePost(id: number): Observable<{ message: string }> {
     return from(this.feedPostRepository.delete(id)).pipe(
       switchMap((deleteResult: DeleteResult) => {
         if (deleteResult.affected === 0) {
           return handleError(HttpStatus.NOT_FOUND, 'Post not found');
         }
-        return of(deleteResult);
+        return of({ message: 'Post deleted successfully' });
       }),
       catchError(() => {
         return handleError(
