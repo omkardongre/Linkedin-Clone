@@ -89,11 +89,6 @@ export class PostService {
       .delete<void>(`${environment.baseApiUrl}/feed/${postId}`)
       .pipe(
         take(1),
-        tap((response) => {
-          if (response !== undefined) {
-            throw new Error("Failed to delete post");
-          }
-        }),
         catchError(this.errorHandlerService.handleError<void>("deletePost")),
       );
   }
