@@ -43,6 +43,9 @@ export class SignupPage {
       const newUser: NewUser = this.signupForm.value;
 
       this.authService.register(newUser).subscribe((user: User) => {
+        if (!user) {
+          return;
+        }
         this.authService
           .login(newUser.email, newUser.password)
           .subscribe(() => {
