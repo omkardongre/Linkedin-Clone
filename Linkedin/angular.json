@@ -112,7 +112,13 @@
           "configurations": {
             "ci": {
               "progress": false,
-              "watch": false
+              "watch": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ]
             }
           }
         },
@@ -126,9 +132,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@ionic/angular-toolkit"
-    ],
+    "schematicCollections": ["@ionic/angular-toolkit"],
     "analytics": false
   },
   "schematics": {
