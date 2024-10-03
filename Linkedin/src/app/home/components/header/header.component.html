@@ -40,7 +40,11 @@
             <ion-icon name="notifications"></ion-icon>
             <ion-label class="nav-label">Notifications</ion-label>
           </div>
-          <div class="nav-button" (click)="presentPopover($event)">
+          <div
+            id="present-popover"
+            class="nav-button"
+            (click)="presentPopover($event)"
+          >
             <ion-avatar>
               <img
                 *ngIf="userFullImagePath"
