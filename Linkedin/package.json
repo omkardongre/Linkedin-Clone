@@ -34,6 +34,7 @@
     "ionicons": "^7.2.1",
     "jwt-decode": "^4.0.0",
     "magic-bytes.js": "^1.10.0",
+    "pg": "^8.13.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
@@ -51,6 +52,7 @@
     "@capacitor/cli": "^6.1.2",
     "@ionic/angular-toolkit": "^11.0.1",
     "@types/jasmine": "~5.1.0",
+    "@types/pg": "^8.11.10",
     "@typescript-eslint/parser": "^8.8.0",
     "add": "^2.0.6",
     "cypress": "^13.15.0",
