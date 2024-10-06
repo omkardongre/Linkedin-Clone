@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { authGuard } from "./auth/guards/auth.guard";
 import { UserProfileComponent } from "./home/components/user-profile/user-profile.component";
 import { ConnectionProfileComponent } from "./home/components/connection-profile/connection-profile.component";
+import { ChatComponent } from "./home/components/chat/chat.component";
 
 export const routes: Routes = [
   {
@@ -16,6 +17,10 @@ export const routes: Routes = [
       {
         path: ":id",
         component: ConnectionProfileComponent,
+      },
+      {
+        path: "chat/connections",
+        component: ChatComponent,
       },
     ],
   },
