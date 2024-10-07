@@ -129,4 +129,10 @@ export class UserController {
     const friendIdInt = parseInt(friendId);
     return this.userService.findFriendRequest(req.user.id, friendIdInt);
   }
+
+  @UseGuards(JwtGuard)
+  @Get('friends/my')
+  getFriends(@Request() req: any): Observable<User[]> {
+    return this.userService.getFriends(req.user);
+  }
 }
