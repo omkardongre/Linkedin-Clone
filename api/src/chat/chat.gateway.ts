@@ -1,5 +1,4 @@
 import {
-  ConnectedSocket,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -11,7 +10,6 @@ import { Server, Socket } from 'socket.io';
     origin: 'http://localhost:8100',
   },
 })
-@WebSocketGateway()
 export class ChatGateway {
   @WebSocketServer()
   server: Server;
