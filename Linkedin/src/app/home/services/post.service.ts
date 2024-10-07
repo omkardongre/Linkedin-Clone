@@ -43,11 +43,6 @@ export class PostService {
     return this.http
       .get<Post[]>(`${environment.baseApiUrl}/feed${queryParams}`)
       .pipe(
-        tap((posts: Post[]) => {
-          if (posts.length === 0) {
-            throw new Error("No posts found");
-          }
-        }),
         catchError(
           this.errorHandlerService.handleError<Post[]>("getSelectedPosts", []),
         ),

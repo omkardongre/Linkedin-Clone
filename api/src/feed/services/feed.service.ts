@@ -29,10 +29,13 @@ export class FeedService {
       }),
     ).pipe(
       switchMap((feedPosts: FeedPost[]) => {
-        if (!feedPosts.length) {
-          return handleError(HttpStatus.NOT_FOUND, 'No records found');
-        }
         return of(feedPosts);
+      }),
+      catchError(() => {
+        return handleError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'Error fetching posts',
+        );
       }),
     );
   }
