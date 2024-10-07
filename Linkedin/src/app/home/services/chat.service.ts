@@ -1,6 +1,9 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Socket, SocketIoConfig } from "ngx-socket-io";
 import { Observable } from "rxjs";
+import { User } from "src/app/auth/models/user.model";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
@@ -12,7 +15,7 @@ export class ChatService {
   };
   public socket: Socket;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.socket = new Socket(this.socketConfig);
   }
 
@@ -20,7 +23,11 @@ export class ChatService {
     this.socket.emit("sendMessage", msg);
   }
 
-  getMessage(): Observable<string> {
+  getNewMessage(): Observable<string> {
     return this.socket.fromEvent<string>("newMessage");
+  }
+
+  getFriends(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.baseApiUrl}/user/friends/my`);
   }
 }
