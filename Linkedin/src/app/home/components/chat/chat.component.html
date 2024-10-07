@@ -21,16 +21,7 @@
         <ion-row class="ion-align-items-center ion-justify-content-center">
           <ion-col size="auto">
             <ion-avatar>
-              <ion-img
-                [src]="authService.getFullImagePath(friend.imagePath)"
-              ></ion-img>
-              <!-- <ng-template #blankProfilePicture>
-                <ion-img
-                  [src]="
-                    'http://localhost:3000/api/feed/image/blank-profile-picture.png'
-                  "
-                ></ion-img>
-              </ng-template> -->
+              <ion-img [src]="userFullImagePath"></ion-img>
             </ion-avatar>
           </ion-col>
           <ion-col>
