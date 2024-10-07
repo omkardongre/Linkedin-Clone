@@ -1,9 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { FormsModule, NgForm } from "@angular/forms";
 import { IonicModule } from "@ionic/angular";
 import { ChatService } from "../../services/chat.service";
-import { Observable } from "rxjs";
+import { Observable, Subscription, take } from "rxjs";
+import { AuthService } from "src/app/auth/services/auth.service";
+import { User } from "src/app/auth/models/user.model";
 
 @Component({
   selector: "app-chat",
@@ -12,25 +14,52 @@ import { Observable } from "rxjs";
   imports: [IonicModule, CommonModule, FormsModule],
   standalone: true,
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild("form") form!: NgForm;
 
+  user!: User;
+  private $userSubscription!: Subscription;
+  userFullImagePath!: string;
+
+  newMessage$!: Observable<string>;
   messages: string[] = [];
 
-  constructor(private chatService: ChatService) {}
+  friends: User[] = [];
+
+  constructor(
+    private chatService: ChatService,
+    public authService: AuthService,
+  ) { }
 
   ngOnInit() {
-    this.chatService.getMessage().subscribe((msg) => {
-      this.messages.push(msg);
+    // TODO: refactor - unsubscribe
+
+    this.$userSubscription = this.authService.userStream
+      .pipe(take(1))
+      .subscribe((user: User | null) => {
+        this.user = user!;
+        this.userFullImagePath = this.authService.getFullImagePath(
+          user!.imagePath,
+        );
+      });
+
+    this.chatService.getNewMessage().subscribe((message: string) => {
+      this.messages.push(message);
+    });
+
+    this.chatService.getFriends().subscribe((friends: User[]) => {
+      this.friends = friends;
     });
   }
 
   onSubmit() {
     const { message } = this.form.value;
-    if (!message) {
-      return;
-    }
+    if (!message) return;
     this.chatService.sendMessage(message);
     this.form.reset();
+  }
+
+  ngOnDestroy() {
+    this.$userSubscription.unsubscribe();
   }
 }
