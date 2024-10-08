@@ -5,9 +5,8 @@ import {
   FriendRequest,
   FriendRequestResponse,
 } from "../../models/FriendRequest";
-import { PopoverComponent } from "../popover/popover.component";
 import { ConnectionProfileService } from "src/app/home/services/connection-profile.service";
-import { FriendRequestSender } from "src/app/auth/models/user.model";
+import { FriendRequestSender } from "src/app/home/components/models/FriendRequest";
 import { AuthService } from "src/app/auth/services/auth.service";
 
 @Component({
@@ -31,8 +30,8 @@ export class FriendRequestsPopoverComponent implements OnInit {
       (friendRequest: FriendRequest) => {
         this.friendRequestSender.push({
           id: friendRequest.id!,
-          firstName: friendRequest.creator!.firstName,
-          lastName: friendRequest.creator!.lastName,
+          firstName: friendRequest.creator!.firstName!,
+          lastName: friendRequest.creator!.lastName!,
           fullImagePath: this.authService.getFullImagePath(
             friendRequest.creator!.imagePath,
           ),

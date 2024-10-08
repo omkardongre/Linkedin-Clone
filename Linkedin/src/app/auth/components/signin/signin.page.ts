@@ -18,7 +18,7 @@ import { ErrorHandlerService } from "src/app/core/error.handler.service";
   standalone: true,
   imports: [ReactiveFormsModule, IonicModule, CommonModule],
 })
-export class SigninPage implements OnInit {
+export class SigninPage {
   signinForm: FormGroup;
   showPassword: boolean = false;
   errorMessage: string | null = null;
@@ -35,8 +35,6 @@ export class SigninPage implements OnInit {
       password: ["", [Validators.required, Validators.minLength(6)]],
     });
   }
-
-  ngOnInit() {}
 
   async presentToast(message: string, duration: number = 2000) {
     const toast = await this.toastController.create({

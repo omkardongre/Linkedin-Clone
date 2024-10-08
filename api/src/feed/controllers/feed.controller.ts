@@ -52,7 +52,7 @@ export class FeedController {
 
   @UseGuards(JwtGuard, IsCreatorGuard)
   @Delete(':id')
-  delete(@Param('id') id: number): Observable<DeleteResult> {
+  delete(@Param('id') id: number): Observable<{ message: string }> {
     return this.feedService.deletePost(id);
   }
 

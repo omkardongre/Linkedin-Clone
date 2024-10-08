@@ -32,7 +32,7 @@
             <ion-icon name="briefcase"></ion-icon>
             <ion-label class="nav-label">Jobs</ion-label>
           </div>
-          <div class="nav-button">
+          <div class="nav-button" [routerLink]="['chat/connections']">
             <ion-icon name="chatbubbles"></ion-icon>
             <ion-label class="nav-label">Messaging</ion-label>
           </div>
@@ -40,7 +40,11 @@
             <ion-icon name="notifications"></ion-icon>
             <ion-label class="nav-label">Notifications</ion-label>
           </div>
-          <div class="nav-button" (click)="presentPopover($event)">
+          <div
+            id="present-popover"
+            class="nav-button"
+            (click)="presentPopover($event)"
+          >
             <ion-avatar>
               <img
                 *ngIf="userFullImagePath"

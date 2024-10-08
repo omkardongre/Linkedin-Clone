@@ -20,7 +20,7 @@ import { ErrorHandlerService } from "src/app/core/error.handler.service";
   standalone: true,
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
 })
-export class SignupPage implements OnInit {
+export class SignupPage {
   signupForm: FormGroup;
   showPassword: boolean = false;
 
@@ -38,15 +38,12 @@ export class SignupPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
-
   onSubmit() {
     if (this.signupForm.valid) {
       const newUser: NewUser = this.signupForm.value;
 
       this.authService.register(newUser).subscribe((user: User) => {
         if (!user) {
-          this.errorHandlerService.handleError<User>("register");
           return;
         }
         this.authService

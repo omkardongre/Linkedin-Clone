@@ -1,4 +1,4 @@
-<div class="card-container">
+<div class="card-container" *ngIf="friendUser">
   <ion-card>
     <div class="profile-header">
       <div class="profile-image">
@@ -8,15 +8,15 @@
       </div>
     </div>
     <ion-card-content>
-      <h2>{{ friendUser?.firstName }} {{ friendUser?.lastName }}</h2>
+      <h2>{{ friendUser.firstName }} {{ friendUser.lastName }}</h2>
       <p>Software Engineer</p>
       <p>Pune, India · <a href="#">Contact info</a></p>
       <ion-grid>
         <ion-row class="ion-justify-content-start">
           <ion-col size="12" size-md="6">
             <ion-row class="ion-justify-content-start">
-              <ion-col size="auto" *ngIf="friendRequest?.status !== 'ACCEPTED'">
-                <ng-container [ngSwitch]="friendRequest?.status">
+              <ion-col size="auto">
+                <ng-container [ngSwitch]="friendRequestStatus">
                   <ion-button
                     *ngSwitchCase="'NOT-SENT'"
                     expand="block"

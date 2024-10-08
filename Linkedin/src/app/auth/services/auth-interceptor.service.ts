@@ -5,13 +5,13 @@ import {
   HttpRequest,
 } from "@angular/common/http";
 import { from, Observable, switchMap, take } from "rxjs";
-import { Storage } from "@capacitor/storage";
+import { Preferences } from "@capacitor/preferences";
 
 export const AuthInterceptorService: HttpInterceptorFn = (
   req: HttpRequest<any>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<any>> => {
-  return from(Storage.get({ key: "token" })).pipe(
+  return from(Preferences.get({ key: "token" })).pipe(
     take(1),
     switchMap((data) => {
       if (data.value) {

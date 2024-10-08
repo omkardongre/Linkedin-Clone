@@ -15,7 +15,7 @@ import {
   take,
   tap,
 } from "rxjs";
-import { Storage } from "@capacitor/storage";
+import { Preferences } from "@capacitor/preferences";
 import { UserResponse } from "../models/userResponse.model";
 import { jwtDecode } from "jwt-decode";
 import { ErrorHandlerService } from "src/app/core/error.handler.service";
@@ -48,7 +48,7 @@ export class AuthService {
     return this.$user.asObservable().pipe(
       filter((user: User | null): user is User => user !== null),
       switchMap((user: User) => {
-        return of(user.role);
+        return of(user.role!);
       }),
     );
   }
@@ -57,7 +57,7 @@ export class AuthService {
     return this.$user.asObservable().pipe(
       filter((user: User | null): user is User => user !== null),
       switchMap((user: User) => {
-        return of(user.id);
+        return of(user.id!);
       }),
     );
   }
@@ -79,7 +79,7 @@ export class AuthService {
       .pipe(
         take(1),
         tap(async (response: { token: string }) => {
-          await Storage.set({ key: "token", value: response.token });
+          await Preferences.set({ key: "token", value: response.token });
           const decodedToken: UserResponse = jwtDecode(response.token);
           this.$user.next(decodedToken.user);
           this.errorHandlerService.presentSuccessToast("User logged in");
@@ -105,12 +105,12 @@ export class AuthService {
 
   logout() {
     this.$user.next(null);
-    Storage.remove({ key: "token" });
+    Preferences.remove({ key: "token" });
   }
 
   //Check on app start if token is in storage
   isTokenInStorage(): Observable<boolean> {
-    return from(Storage.get({ key: "token" })).pipe(
+    return from(Preferences.get({ key: "token" })).pipe(
       take(1),
       switchMap((data) => {
         if (!data.value) {

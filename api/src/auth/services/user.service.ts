@@ -1,9 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { from, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../models/user.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { In, Repository, UpdateResult } from 'typeorm';
 import {
   FriendRequest,
   FriendRequest_Status,
@@ -38,10 +38,13 @@ export class UserService {
       }),
     ).pipe(
       switchMap((friendRequest: FriendRequest) => {
-        if (!friendRequest) {
-          return handleError(HttpStatus.NOT_FOUND, 'Friend request not found');
-        }
         return of(friendRequest);
+      }),
+      catchError(() => {
+        return handleError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'An error occurred while finding the friend request',
+        );
       }),
     );
   }
@@ -219,6 +222,35 @@ export class UserService {
       this.friendRequestRepository.find({
         where: { receiver: user },
         relations: ['receiver', 'creator'],
+      }),
+    );
+  }
+
+  getFriends(user: User): Observable<User[]> {
+    return from(
+      this.friendRequestRepository.find({
+        where: [
+          { creator: user, status: 'ACCEPTED' },
+          { receiver: user, status: 'ACCEPTED' },
+        ],
+        relations: ['creator', 'receiver'],
+      }),
+    ).pipe(
+      switchMap((friendRequests: FriendRequest[]) => {
+        const userIds: number[] = [];
+        friendRequests.forEach((friendRequest: FriendRequest) => {
+          if (friendRequest.creator.id !== user.id) {
+            userIds.push(friendRequest.creator.id);
+          } else if (friendRequest.receiver.id !== user.id) {
+            userIds.push(friendRequest.receiver.id);
+          }
+        });
+
+        return from(
+          this.userRepository.findBy({
+            id: In(userIds),
+          }),
+        );
       }),
     );
   }
