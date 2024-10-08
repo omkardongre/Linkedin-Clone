@@ -21,9 +21,9 @@ export class ConnectionProfileService {
 
   friendRequests: FriendRequest[] = [];
 
-  // getConnectionUser(id: number): Observable<User> {
-  //   return this.http.get<User>(`${environment.baseApiUrl}/user/${id}`);
-  // }
+  getConnectionUser(id: number): Observable<User> {
+    return this.http.get<User>(`${environment.baseApiUrl}/user/${id}`);
+  }
 
   // getFriendRequestStatus(id: number): Observable<FriendRequestStatus> {
   //   return this.http.get<FriendRequestStatus>(
