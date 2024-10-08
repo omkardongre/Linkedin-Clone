@@ -48,7 +48,7 @@ export class AuthService {
     return this.$user.asObservable().pipe(
       filter((user: User | null): user is User => user !== null),
       switchMap((user: User) => {
-        return of(user.role);
+        return of(user.role!);
       }),
     );
   }
@@ -57,7 +57,7 @@ export class AuthService {
     return this.$user.asObservable().pipe(
       filter((user: User | null): user is User => user !== null),
       switchMap((user: User) => {
-        return of(user.id);
+        return of(user.id!);
       }),
     );
   }

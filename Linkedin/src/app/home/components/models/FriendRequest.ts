@@ -19,3 +19,10 @@ export interface FriendRequest {
   receiver?: User;
   status?: FriendRequest_Status;
 }
+
+export interface FriendRequestSender {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullImagePath: string;
+}
