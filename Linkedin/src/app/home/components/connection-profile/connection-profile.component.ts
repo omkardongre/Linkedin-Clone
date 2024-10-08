@@ -22,11 +22,13 @@ import { HeaderComponent } from "../header/header.component";
   imports: [IonicModule, CommonModule, HeaderComponent],
 })
 export class ConnectionProfileComponent implements OnInit {
-  userFullImagePath!: string;
-  friendRequest: FriendRequest | undefined;
-  friendUserId!: number;
-  userId!: number;
-  friendUser: User | undefined;
+  userFullImagePath: string = "";
+  friendRequest!: FriendRequest;
+  friendRequestStatus: FriendRequest_Status = "NOT-SENT";
+  friendUserId: number = -1;
+  userId: number = -1;
+  friendUser!: User;
+  user!: User;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,21 +49,35 @@ export class ConnectionProfileComponent implements OnInit {
       this.userId = userId;
     });
 
-    // this.authService.userStream.pipe(take(1)).subscribe((user: User | null) => {
-    //   this.user = user!;
-    //   this.userFullImagePath = this.authService.getFullImagePath(
-    //     user!.imagePath,
-    //   );
-    // });
+    this.connectionProfileService
+      .getConnectionUser(this.friendUserId)
+      .subscribe((user: User) => {
+        this.friendUser = user;
+        this.userFullImagePath = this.authService.getFullImagePath(
+          user.imagePath,
+        );
+      });
+
+    this.authService.userStream.pipe(take(1)).subscribe((user: User | null) => {
+      this.user = user!;
+      this.userFullImagePath = this.authService.getFullImagePath(
+        user!.imagePath,
+      );
+    });
 
     this.connectionProfileService
       .getFriendRequest(this.friendUserId)
       .subscribe((friendRequest: FriendRequest) => {
+        if (!friendRequest) {
+          return;
+        }
+
         this.friendRequest = friendRequest;
+        this.friendRequestStatus = friendRequest.status!;
         if (friendRequest.creator?.id === this.userId) {
-          this.friendUser = friendRequest.receiver;
+          this.friendUser = friendRequest.receiver!;
         } else {
-          this.friendUser = friendRequest.creator;
+          this.friendUser = friendRequest.creator!;
         }
 
         this.userFullImagePath = this.authService.getFullImagePath(
@@ -71,12 +87,10 @@ export class ConnectionProfileComponent implements OnInit {
   }
 
   addUser(): Subscription {
-    this.friendRequest!.status = "PENDING";
     return this.connectionProfileService
       .addConnectionUser(this.friendUserId)
-
       .subscribe(() => {
-        this.friendRequest!.status = "PENDING";
+        this.friendRequestStatus = "PENDING";
       });
   }
 
@@ -91,10 +105,11 @@ export class ConnectionProfileComponent implements OnInit {
   // }
 
   handleFriendRequest(status: FriendRequestResponse) {
+    this.friendRequestStatus = status;
     this.connectionProfileService
-      .responseToFriendRequest(this.friendRequest!.id!, status)
+      .responseToFriendRequest(this.friendRequest.id!, status)
       .subscribe((friendRequest: FriendRequest) => {
-        this.friendRequest!.status = friendRequest.status;
+        this.friendRequest.status = friendRequest.status;
       });
   }
 }

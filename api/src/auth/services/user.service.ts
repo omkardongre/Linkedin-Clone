@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { from, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
 import { User } from '../models/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../models/user.entity';
@@ -38,10 +38,13 @@ export class UserService {
       }),
     ).pipe(
       switchMap((friendRequest: FriendRequest) => {
-        if (!friendRequest) {
-          return handleError(HttpStatus.NOT_FOUND, 'Friend request not found');
-        }
         return of(friendRequest);
+      }),
+      catchError(() => {
+        return handleError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'An error occurred while finding the friend request',
+        );
       }),
     );
   }
